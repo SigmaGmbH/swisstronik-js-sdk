@@ -1,0 +1,21 @@
+{
+  "name": "swisstronik-js-sdk",
+  "description": "Monorepo for JS/TS Swisstronik packages",
+  "license": "Apache-2.0",
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "lerna run build",
+    "test": "lerna run test",
+    "clean": "lerna run clean",
+    "publish": "lerna publish from-package --force-publish=* --yes"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "lerna": "^7.3.0"
+  }
+}
