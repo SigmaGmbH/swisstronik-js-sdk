@@ -18,6 +18,7 @@ import {
 	SignerData
 } from "@cosmjs/stargate"
 import { BaseAccount } from "cosmjs-types/cosmos/auth/v1beta1/auth";
+import { EthAccount } from "./types-proto/ethermint/types/v1/account";
 import { Tendermint34Client } from "@cosmjs/tendermint-rpc"
 import { createDefaultIdentityRegistry } from "./registry.js"
 import {
@@ -177,7 +178,7 @@ export class SwisstronikSigningStargateClient extends SigningStargateClient {
 		try {
 			console.log(`[sdk::signer.ts] Requesting account data for ${searchAddress}`)
 			const account = await this.forceGetQueryClient().auth.account(searchAddress);
-			console.log(`[sdk::signer.ts] Obtained data`)
+			console.log(`[sdk::signer.ts] Obtained data: `, account)
 			return account ? this.overridenAccountParser(account) : null;
 		} catch (error: any) {
 			console.log(`[sdk::signer.ts] Cannot obtain data. Reason: ${error}`)
@@ -344,6 +345,7 @@ export class SwisstronikSigningStargateClient extends SigningStargateClient {
 
 	private accountFromAny(input: Any): Account {
 		const { value } = input
+		console.log('DEBUG: value to decode', Buffer.from(value).toString('hex'))
 		const account = BaseAccount.decode(value)
 		const { address, pubKey, accountNumber, sequence } = account;
 		const pubkey = pubKey ? this.decodePubkey(pubKey) : null;
