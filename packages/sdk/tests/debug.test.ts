@@ -9,19 +9,18 @@ import {
 import {
     EthAccount
 } from '../src/types-proto/ethermint/types/v1/account'
-import {
-    BaseAccount
-} from '../src/types-proto/cosmos/auth/v1beta1/auth'
 
 describe('debug', () => {
-    it('encode decode', async () => {
-        const acc = BaseAccount.fromPartial({
-            accountNumber: 0,
-            address: "debug",
-            sequence: 0,
+    it('Should be able to encode and decode', async () => {
+        const acc = EthAccount.fromPartial({
+            baseAccount: {
+                accountNumber: 0,
+                address: "debug",
+                sequence: 0,
+            }
         })
-        const encoded = BaseAccount.encode(acc).finish()
-        const decoded = BaseAccount.decode(encoded)
+        const encoded = EthAccount.encode(acc).finish()
+        const decoded = EthAccount.decode(encoded)
         console.log(decoded)
     })
     // it('can be instantiated & works for swisstronik network', async () => {
