@@ -345,8 +345,8 @@ export class SwisstronikSigningStargateClient extends SigningStargateClient {
 
 	private accountFromAny(input: Any): Account {
 		const { value } = input
-		const account = BaseAccount.decode(value)
-		const { address, pubKey, accountNumber, sequence } = account;
+		const account = EthAccount.decode(value)
+		const { address, pubKey, accountNumber, sequence } = account.baseAccount!;
 		const pubkey = pubKey ? this.decodePubkey(pubKey) : null;
 		return {
 			address: address,

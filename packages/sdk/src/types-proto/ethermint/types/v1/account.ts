@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { BaseAccount } from "cosmjs-types/cosmos/auth/v1beta1/auth";
-import * as _m0 from "protobufjs/minimal";
+import _m0 from "protobufjs/minimal";
 import { isSet, DeepPartial, Exact } from "cosmjs-types/helpers";
 export const protobufPackage = "ethermint.types.v1";
 /**

@@ -23,11 +23,12 @@ describe('debug', () => {
         const decoded = EthAccount.decode(encoded)
         console.log(decoded)
     })
-    // it('can be instantiated & works for swisstronik network', async () => {
-    //     const wallet = await DirectSecp256k1HdWallet.fromMnemonic(faucet.mnemonic)
-    //     const signer = await SwisstronikSigningStargateClient.connectWithSigner("https://rpc.testnet.swisstronik.com", wallet)
+    
+    it('can be instantiated & works for swisstronik network', async () => {
+        const wallet = await DirectSecp256k1HdWallet.fromMnemonic(faucet.mnemonic)
+        const signer = await SwisstronikSigningStargateClient.connectWithSigner("https://rpc.testnet.swisstronik.com", wallet)
 
-    //     const res = await signer.getAccount("swtr1fv64953tatw4t80t6sn725fr2yzf2dyv8g96en")
-    //     console.log(res)
-    // }, 15000)
+        const res = await signer.getAccount("swtr1fv64953tatw4t80t6sn725fr2yzf2dyv8g96en")
+        console.log(res)
+    }, 15000)
 })
