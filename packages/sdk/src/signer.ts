@@ -345,8 +345,11 @@ export class SwisstronikSigningStargateClient extends SigningStargateClient {
 
 	private accountFromAny(input: Any): Account {
 		console.log('[DEBUG] Using overriden account parser')
+    console.log('[DEBUG] Input - ', input)
 		const { value } = input
+    console.log('DEBUG: value to decode', Buffer.from(value).toString('hex'))
 		const account = EthAccount.decode(value)
+    console.log('[DEBUG] account', account)
 		const { address, pubKey, accountNumber, sequence } = account.baseAccount!;
 		const pubkey = pubKey ? this.decodePubkey(pubKey) : null;
 		return {
