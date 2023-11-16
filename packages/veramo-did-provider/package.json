@@ -1,6 +1,6 @@
 {
   "name": "@swisstronik/veramo-did-provider",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Veramo SDK plugin for the did:swtr DID method",
   "source": "src/index.ts",
   "module": "build/esm/index.js",
