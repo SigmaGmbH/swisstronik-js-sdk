@@ -1,6 +1,6 @@
 {
   "name": "@swisstronik/utils",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Library with different utils for transaction encryption / decryption",
   "source": "src/index.ts",
   "module": "./build/esm/index.js",

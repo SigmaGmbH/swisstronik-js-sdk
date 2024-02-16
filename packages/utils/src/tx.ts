@@ -18,7 +18,7 @@ import {randomBytes} from 'tweetnacl'
  */
 export function encryptDataFieldWithPublicKey(nodePublicKey: string, data: string | Uint8Array, userEncryptionKey?: Uint8Array): [string, Uint8Array] {
   // Generate random user encryption key if is not provided
-  userEncryptionKey = userEncryptionKey ?? randomBytes(32);
+  userEncryptionKey = userEncryptionKey != null ? userEncryptionKey : randomBytes(32);
 
   // Create encryption key using KDF
   const encryptionPrivateKey = deriveEncryptionKey(
@@ -51,7 +51,7 @@ export async function encryptDataField(
   userEncryptionKey?: Uint8Array
 ): Promise<[string, Uint8Array]> {
   // Generate random user encryption key if is not provided
-  userEncryptionKey = userEncryptionKey ?? randomBytes(32)
+  userEncryptionKey = userEncryptionKey != null ? userEncryptionKey : randomBytes(32);
 
   // Create encryption key using KDF
   const encryptionPrivateKey = deriveEncryptionKey(
