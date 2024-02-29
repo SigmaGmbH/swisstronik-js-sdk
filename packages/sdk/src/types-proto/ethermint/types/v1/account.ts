@@ -2,7 +2,9 @@
 import { BaseAccount } from "cosmjs-types/cosmos/auth/v1beta1/auth";
 import _m0 from "protobufjs/minimal";
 import { isSet, DeepPartial, Exact } from "cosmjs-types/helpers";
+import { Any } from "cosmjs-types/google/protobuf/any";
 export const protobufPackage = "ethermint.types.v1";
+import Long from "long";
 /**
  * EthAccount implements the authtypes.AccountI interface and embeds an
  * authtypes.BaseAccount type. It is compatible with the auth AccountKeeper.
@@ -19,6 +21,72 @@ function createBaseEthAccount(): EthAccount {
     codeHash: "",
   };
 }
+
+function createBaseAny() {
+  return {
+      typeUrl: "",
+      value: new Uint8Array(),
+  };
+}
+
+function anyDecode(input: Uint8Array | _m0.Reader, length?: number) {
+  const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+  let end = length === undefined ? reader.len : reader.pos + length;
+  const message = createBaseAny();
+  while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+          case 1:
+              message.typeUrl = reader.string();
+              break;
+          case 2:
+              message.value = reader.bytes();
+              break;
+          default:
+              reader.skipType(tag & 7);
+              break;
+      }
+  }
+  return message;
+};
+
+function baseAccountCreateBaseBaseAccount() {
+  return {
+      address: "",
+      pubKey: undefined as Any | undefined,
+      accountNumber: Long.UZERO,
+      sequence: Long.UZERO,
+  };
+};
+
+function baseAccountDecode(input: Uint8Array | _m0.Reader, length?: number) {
+  const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+  let end = length === undefined ? reader.len : reader.pos + length;
+  const message = baseAccountCreateBaseBaseAccount();
+
+  while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+          case 1:
+              message.address = reader.string();
+              break;
+          case 2:
+              message.pubKey = anyDecode(reader, reader.uint32());
+              break;
+          case 3:
+              message.accountNumber = reader.uint64() as Long;
+              break;
+          case 4:
+              message.sequence = reader.uint64() as Long;
+              break;
+          default:
+              reader.skipType(tag & 7);
+              break;
+      }
+  }
+  return message;
+};
+
 export const EthAccount = {
   encode(message: EthAccount, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.baseAccount !== undefined) {
@@ -37,7 +105,8 @@ export const EthAccount = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.baseAccount = BaseAccount.decode(reader, reader.uint32());
+          message.baseAccount = baseAccountDecode(reader, reader.uint32());
+          // message.baseAccount = BaseAccount.decode(reader, reader.uint32());
           break;
         case 2:
           message.codeHash = reader.string();
