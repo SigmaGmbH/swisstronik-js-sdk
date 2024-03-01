@@ -3,6 +3,7 @@ import { BaseAccount } from "cosmjs-types/cosmos/auth/v1beta1/auth";
 import _m0 from "protobufjs/minimal";
 import { isSet, DeepPartial, Exact } from "cosmjs-types/helpers";
 export const protobufPackage = "ethermint.types.v1";
+import { decodeBaseAccount } from "../../../cosmos/auth/v1beta1/auth";
 /**
  * EthAccount implements the authtypes.AccountI interface and embeds an
  * authtypes.BaseAccount type. It is compatible with the auth AccountKeeper.
@@ -19,6 +20,7 @@ function createBaseEthAccount(): EthAccount {
     codeHash: "",
   };
 }
+
 export const EthAccount = {
   encode(message: EthAccount, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.baseAccount !== undefined) {
@@ -37,7 +39,7 @@ export const EthAccount = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.baseAccount = BaseAccount.decode(reader, reader.uint32());
+          message.baseAccount = decodeBaseAccount(reader, reader.uint32());
           break;
         case 2:
           message.codeHash = reader.string();
