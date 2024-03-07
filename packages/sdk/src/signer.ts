@@ -17,8 +17,7 @@ import {
 	SequenceResponse,
 	SignerData
 } from "@cosmjs/stargate"
-import { BaseAccount } from "cosmjs-types/cosmos/auth/v1beta1/auth";
-import { EthAccount } from "./types-proto/ethermint/types/v1/account";
+import { EthAccount } from "./types-proto/ethermint/types/v1/account.js";
 import { Tendermint34Client } from "@cosmjs/tendermint-rpc"
 import { createDefaultIdentityRegistry } from "./registry.js"
 import {
@@ -27,7 +26,7 @@ import {
 	MsgUpdateDIDDocumentPayload,
 	MsgDeactivateDIDDocumentPayload,
 	VerificationMethod
-} from './types-proto';
+} from './types-proto/index.js';
 import {
 	DidStdFee,
 	ISignInputs,
@@ -58,9 +57,9 @@ import { SignMode } from 'cosmjs-types/cosmos/tx/signing/v1beta1/signing.js'
 import { Any } from 'cosmjs-types/google/protobuf/any.js'
 import { Coin } from 'cosmjs-types/cosmos/base/v1beta1/coin.js'
 import Long from 'long'
-import { PubKey as CosmosCryptoEd25519Pubkey } from "cosmjs-types/cosmos/crypto/ed25519/keys";
-import { PubKey as CosmosCryptoSecp256k1Pubkey } from "cosmjs-types/cosmos/crypto/secp256k1/keys";
-import { PubKey as CommonPubKey } from "cosmjs-types/cosmos/crypto/secp256k1/keys";
+import { PubKey as CosmosCryptoEd25519Pubkey } from "cosmjs-types/cosmos/crypto/ed25519/keys.js";
+import { PubKey as CosmosCryptoSecp256k1Pubkey } from "cosmjs-types/cosmos/crypto/secp256k1/keys.js";
+import { PubKey as CommonPubKey } from "cosmjs-types/cosmos/crypto/secp256k1/keys.js";
 import { Secp256k1 } from "./compatability/secp256k1.js";
 
 export function calculateDidFee(gasLimit: number, gasPrice: string | GasPrice): DidStdFee {

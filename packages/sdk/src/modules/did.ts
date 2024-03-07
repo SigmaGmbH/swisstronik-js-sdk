@@ -38,14 +38,14 @@ import {
 	DIDDocumentWithMetadata as DIDDocumentWithMetadataProto,
 	DIDDocument as DIDDocumentProto,
 	Metadata
-} from "../types-proto"
+} from "../types-proto/index.js"
 import {
 	EncodeObject,
 	GeneratedType
 } from "@cosmjs/proto-signing"
 import { v4 } from "uuid"
 import { assert } from "@cosmjs/utils";
-import { PageRequest } from "../types-proto";
+import { PageRequest } from "../types-proto/index.js";
 import { SwisstronikQuerier } from "../querier.js";
 import { DIDDocumentMetadata } from "did-resolver";
 

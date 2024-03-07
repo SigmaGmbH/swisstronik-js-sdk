@@ -4,7 +4,7 @@ export {
     Metadata,
     VerificationMethod,
     Service,
-} from './document'
+} from './document.js'
 
 export {
     QueryAllDIDDocumentVersionsMetadataRequest,
@@ -20,7 +20,7 @@ export {
     QueryResourceMetadataResponse,
     QueryResourceRequest,
     QueryResourceResponse,
-} from './query'
+} from './query.js'
 
 export {
     MsgCreateDIDDocument,
@@ -37,11 +37,11 @@ export {
     MsgCreateResourceResponse,
     SignInfo,
     protobufPackage,
-} from './tx'
+} from './tx.js'
 
 export {
     Resource,
     ResourceMetadata,
     ResourceWithMetadata,
     AlternativeUri,
-} from './resource'
+} from './resource.js'

@@ -1,8 +1,8 @@
 /* eslint-disable */
-import _m0 from "protobufjs/minimal";
-import { DIDDocumentWithMetadata } from "./document";
-import { Params } from "./params";
-import { ResourceWithMetadata } from "./resource";
+import _m0 from "protobufjs/minimal.js";
+import { DIDDocumentWithMetadata } from "./document.js";
+import { Params } from "./params.js";
+import { ResourceWithMetadata } from "./resource.js";
 
 export const protobufPackage = "swisstronik.did";
 

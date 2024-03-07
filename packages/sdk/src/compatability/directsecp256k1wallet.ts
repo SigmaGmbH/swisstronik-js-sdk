@@ -3,9 +3,9 @@ import { keccak256 } from "@cosmjs/crypto";
 import {
     Secp256k1,
     rawSecp256k1PubkeyToRawAddress,
-  } from "./secp256k1"
+  } from "./secp256k1.js"
 import { toBech32 } from "@cosmjs/encoding";
-import { SignDoc } from "cosmjs-types/cosmos/tx/v1beta1/tx";
+import { SignDoc } from "cosmjs-types/cosmos/tx/v1beta1/tx.js";
 import { 
     AccountData, 
     DirectSignResponse, 
