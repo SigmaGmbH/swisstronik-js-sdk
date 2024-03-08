@@ -1,8 +1,8 @@
 /* eslint-disable */
-import _m0 from "protobufjs/minimal";
-import { PageRequest, PageResponse } from "../cosmos/base/query/v1beta1/pagination";
-import { DIDDocumentWithMetadata, Metadata } from "./document";
-import { ResourceMetadata, ResourceWithMetadata } from "./resource";
+import _m0 from "protobufjs/minimal.js";
+import { PageRequest, PageResponse } from "../cosmos/base/query/v1beta1/pagination.js";
+import { DIDDocumentWithMetadata, Metadata } from "./document.js";
+import { ResourceMetadata, ResourceWithMetadata } from "./resource.js";
 
 export const protobufPackage = "swisstronik.did";
 

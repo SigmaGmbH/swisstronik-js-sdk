@@ -14,10 +14,10 @@ import {
   Secp256k1,
   Secp256k1Keypair,
   rawSecp256k1PubkeyToRawAddress,
-} from "./secp256k1"
+} from "./secp256k1.js"
 import { fromBase64, fromUtf8, toBase64, toBech32, toUtf8 } from "@cosmjs/encoding";
 import { assert, isNonNullObject } from "@cosmjs/utils";
-import { SignDoc } from "cosmjs-types/cosmos/tx/v1beta1/tx";
+import { SignDoc } from "cosmjs-types/cosmos/tx/v1beta1/tx.js";
 
 import { AccountData, DirectSignResponse, OfflineDirectSigner, makeSignBytes } from "@cosmjs/proto-signing";
 import {
@@ -27,7 +27,7 @@ import {
   executeKdf,
   KdfConfiguration,
   supportedAlgorithms,
-} from "./wallet";
+} from "./wallet.js";
 
 interface AccountDataWithPrivkey extends AccountData {
   readonly privkey: Uint8Array;

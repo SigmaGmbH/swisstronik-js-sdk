@@ -25,7 +25,7 @@ import {
 	protobufPackage,
     PageRequest,
     ResourceMetadata,
-} from "../types-proto"
+} from "../types-proto/index.js"
 import {
 	DeliverTxResponse,
 	QueryClient,

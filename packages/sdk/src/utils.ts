@@ -26,7 +26,7 @@ import {
 } from '@stablelib/ed25519'
 import { DirectSecp256k1HdWallet, DirectSecp256k1Wallet } from '@cosmjs/proto-signing'
 import { EnglishMnemonic as _, sha256 } from '@cosmjs/crypto'
-import { rawSecp256k1PubkeyToRawAddress } from './compatability'
+import { rawSecp256k1PubkeyToRawAddress } from './compatability/index.js'
 import pkg from 'secp256k1'
 import { v4 } from 'uuid'
 import {
@@ -34,12 +34,12 @@ import {
     Service as ProtoService,
     MsgCreateDIDDocumentPayload,
     MsgDeactivateDIDDocumentPayload,
-} from "./types-proto"
+} from "./types-proto/index.js"
 import { DIDModule } from "./modules/did.js"
-import { MsgCreateResourcePayload } from "./types-proto"
+import { MsgCreateResourcePayload } from "./types-proto/index.js"
 import { toBech32 } from "@cosmjs/encoding"
 import { StargateClient } from "@cosmjs/stargate"
-import { Coin } from "cosmjs-types/cosmos/base/v1beta1/coin"
+import { Coin } from "cosmjs-types/cosmos/base/v1beta1/coin.js"
 
 export type TImportableEd25519Key = {
     publicKeyHex: string

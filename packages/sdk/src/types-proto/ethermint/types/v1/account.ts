@@ -1,9 +1,9 @@
 /* eslint-disable */
-import { BaseAccount } from "cosmjs-types/cosmos/auth/v1beta1/auth";
-import _m0 from "protobufjs/minimal";
-import { isSet, DeepPartial, Exact } from "cosmjs-types/helpers";
+import { BaseAccount } from "cosmjs-types/cosmos/auth/v1beta1/auth.js";
+import _m0 from "protobufjs/minimal.js";
+import { isSet, DeepPartial, Exact } from "cosmjs-types/helpers.js";
 export const protobufPackage = "ethermint.types.v1";
-import { decodeBaseAccount } from "../../../cosmos/auth/v1beta1/auth";
+import { decodeBaseAccount } from "../../../cosmos/auth/v1beta1/auth.js";
 /**
  * EthAccount implements the authtypes.AccountI interface and embeds an
  * authtypes.BaseAccount type. It is compatible with the auth AccountKeeper.

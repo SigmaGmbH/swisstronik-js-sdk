@@ -1,3 +1,4 @@
+import "./polyfills.js";
 import {
 	OfflineSigner,
 	Registry
@@ -190,5 +191,5 @@ export {
 	getCosmosAccount,
 	checkBalance
 } from './utils.js'
-export * from './compatability'
-export * from './types-proto'
+export * from './compatability/index.js'
+export * from './types-proto/index.js'
