@@ -1,3 +1,8 @@
+
+/*
+`esmCjsMaps` is a map of ESM package names to their CJS equivalents. 
+This is used to resolve ESM imports to CJS imports for CommonJS build.
+*/
 export const esmCjsMaps = {
   "file-type": "file-type",
   uint8arrays: "uint8arrays/dist/src",
