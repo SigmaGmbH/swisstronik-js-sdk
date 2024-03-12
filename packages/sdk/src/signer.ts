@@ -54,7 +54,7 @@ import {
 	TxRaw
 } from 'cosmjs-types/cosmos/tx/v1beta1/tx.js'
 import { SignMode } from 'cosmjs-types/cosmos/tx/signing/v1beta1/signing.js'
-import { Any } from 'cosmjs-types/google/protobuf/any.js'
+import {Any } from './types-proto/google/protobuf/any.js'
 import { Coin } from 'cosmjs-types/cosmos/base/v1beta1/coin.js'
 import Long from 'long'
 import { PubKey as CosmosCryptoEd25519Pubkey } from "cosmjs-types/cosmos/crypto/ed25519/keys.js";
