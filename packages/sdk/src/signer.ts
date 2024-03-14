@@ -18,7 +18,7 @@ import {
 	SignerData
 } from "@cosmjs/stargate"
 import { EthAccount } from "./types-proto/ethermint/types/v1/account.js";
-import { Tendermint34Client } from "@cosmjs/tendermint-rpc"
+import { Tendermint34Client, Tendermint37Client } from "@cosmjs/tendermint-rpc"
 import { createDefaultIdentityRegistry } from "./registry.js"
 import {
 	MsgCreateDIDDocumentPayload,
@@ -107,7 +107,21 @@ export class SwisstronikSigningStargateClient extends SigningStargateClient {
 	private readonly overridenAccountParser: AccountParser;
 
 	public static async connectWithSigner(endpoint: string | HttpEndpoint, signer: OfflineSigner, options?: SigningStargateClientOptions | undefined): Promise<SwisstronikSigningStargateClient> {
-		const tmClient = await Tendermint34Client.connect(endpoint)
+		// Tendermint/CometBFT 0.34/0.37 auto-detection. Starting with 0.37 we seem to get reliable versions again 🎉
+		// Using 0.34 as the fallback.
+		let tmClient: Tendermint37Client | Tendermint34Client;
+		const tm37Client = await Tendermint37Client.connect(endpoint);
+		const version = (await tm37Client.status()).nodeInfo.version;
+		console.log(`[sdk::signer.ts] Tendermint version: `, version);
+
+		if (version.startsWith("0.37.")) {
+			tmClient = tm37Client;
+		}
+		else {
+			tm37Client.disconnect();
+			tmClient = await Tendermint34Client.connect(endpoint);
+		}
+
 		return new SwisstronikSigningStargateClient(tmClient, signer, {
 			registry: options?.registry ? options.registry : createDefaultIdentityRegistry(),
 			...options
@@ -115,7 +129,7 @@ export class SwisstronikSigningStargateClient extends SigningStargateClient {
 	}
 
 	constructor(
-		tmClient: Tendermint34Client | undefined,
+		tmClient: Tendermint37Client | Tendermint34Client | undefined,
 		signer: OfflineSigner,
 		options: SigningStargateClientOptions = {}
 	) {
