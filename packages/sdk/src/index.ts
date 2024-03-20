@@ -173,6 +173,7 @@ export {
 	isMsgCreateResourceEncodeObject,
 } from './modules/resource.js'
 export * from './signer.js'
+export * from './client.js'
 export * from './querier.js'
 export * from './registry.js'
 export * from './types.js'
