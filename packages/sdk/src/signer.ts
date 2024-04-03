@@ -48,7 +48,7 @@ import {
 	assert,
 	assertDefined
 } from '@cosmjs/utils'
-import { encodeSecp256k1Pubkey, Pubkey, SinglePubkey, encodeEd25519Pubkey, StdFee, makeSignDoc as makeSignDocAmino, isSecp256k1Pubkey, isMultisigThresholdPubkey, MultisigThresholdPubkey } from '@cosmjs/amino'
+import { encodeSecp256k1Pubkey, Pubkey, SinglePubkey, encodeEd25519Pubkey, StdFee, makeSignDoc as makeSignDocAmino, MultisigThresholdPubkey } from '@cosmjs/amino'
 import { Int53 } from '@cosmjs/math'
 import { fromBase64 } from '@cosmjs/encoding'
 import {
@@ -64,7 +64,7 @@ import { PubKey as CosmosCryptoEd25519Pubkey } from "cosmjs-types/cosmos/crypto/
 import { PubKey as CosmosCryptoSecp256k1Pubkey } from "cosmjs-types/cosmos/crypto/secp256k1/keys.js";
 import { PubKey as CommonPubKey } from "cosmjs-types/cosmos/crypto/secp256k1/keys.js";
 import { Secp256k1 } from "./compatability/secp256k1.js";
-import {LegacyAminoPubKey} from "cosmjs-types/cosmos/crypto/multisig/keys"
+import {LegacyAminoPubKey} from "cosmjs-types/cosmos/crypto/multisig/keys.js"
 
 export function calculateDidFee(gasLimit: number, gasPrice: string | GasPrice): DidStdFee {
 	return calculateFee(gasLimit, gasPrice)

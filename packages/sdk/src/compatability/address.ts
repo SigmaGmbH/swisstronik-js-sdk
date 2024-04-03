@@ -1,7 +1,7 @@
 import { fromBase64, fromHex, toBech32 } from "@cosmjs/encoding"
 import { Pubkey, isEd25519Pubkey, isMultisigThresholdPubkey, isSecp256k1Pubkey } from "@cosmjs/amino"
 import { Uint53 } from "@cosmjs/math"
-import { rawSecp256k1PubkeyToRawAddress } from "./secp256k1";
+import { rawSecp256k1PubkeyToRawAddress } from "./secp256k1.js";
 import { sha256 } from '@cosmjs/crypto'
 
 export function encodeAminoPubkey(pubkey: Pubkey) {

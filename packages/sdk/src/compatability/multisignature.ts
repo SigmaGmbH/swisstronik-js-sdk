@@ -1,4 +1,4 @@
-import { pubkeyToAddress } from "./address";
+import { pubkeyToAddress } from "./address.js";
 import {
   StdFee,
   isSecp256k1Pubkey,
@@ -10,7 +10,7 @@ import {
 import { PubKey as Secp256k1PubKey } from "cosmjs-types/cosmos/crypto/secp256k1/keys.js";
 import { PubKey as Ed25519PubKey } from "cosmjs-types/cosmos/crypto/ed25519/keys.js";
 import { fromBase64 } from "@cosmjs/encoding";
-import { LegacyAminoPubKey } from "cosmjs-types/cosmos/crypto/multisig/keys";
+import { LegacyAminoPubKey } from "cosmjs-types/cosmos/crypto/multisig/keys.js";
 import { Uint53 } from "@cosmjs/math";
 import { Any } from "../types-proto/google/protobuf/any.js";
 import { makeCompactBitArray } from "@cosmjs/stargate/build/multisignature.js";
