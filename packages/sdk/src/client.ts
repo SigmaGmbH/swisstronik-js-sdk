@@ -12,6 +12,7 @@ import {
   Pubkey,
   SinglePubkey,
   encodeEd25519Pubkey,
+  MultisigThresholdPubkey,
 } from "@cosmjs/amino";
 import { Any } from "./types-proto/google/protobuf/any.js";
 import Long from "long";
@@ -19,6 +20,7 @@ import { PubKey as CosmosCryptoEd25519Pubkey } from "cosmjs-types/cosmos/crypto/
 import { PubKey as CosmosCryptoSecp256k1Pubkey } from "cosmjs-types/cosmos/crypto/secp256k1/keys.js";
 import { PubKey as CommonPubKey } from "cosmjs-types/cosmos/crypto/secp256k1/keys.js";
 import { Secp256k1 } from "./compatability/secp256k1.js";
+import { LegacyAminoPubKey } from "cosmjs-types/cosmos/crypto/multisig/keys.js";
 
 export class SwisstronikStargateClient extends StargateClient {
   private readonly overridenAccountParser: AccountParser;
@@ -92,17 +94,32 @@ export class SwisstronikStargateClient extends StargateClient {
     return Uint64.fromString(input.toString());
   }
 
-  private decodePubkey(pubkey: Any): Pubkey {
-    switch (pubkey.typeUrl) {
-      case "/ethermint.crypto.v1.ethsecp256k1.PubKey":
-      case "/cosmos.crypto.secp256k1.PubKey":
-      case "/cosmos.crypto.ed25519.PubKey": {
-        return this.anyToSinglePubkey(pubkey);
-      }
-      default:
-        throw new Error(`Pubkey type_url ${pubkey.typeUrl} not recognized`);
-    }
-  }
+	private decodePubkey(pubkey: Any): Pubkey {
+		switch (pubkey.typeUrl) {
+			case "/ethermint.crypto.v1.ethsecp256k1.PubKey":
+			case "/cosmos.crypto.secp256k1.PubKey":
+			case "/cosmos.crypto.ed25519.PubKey": {
+				return this.anyToSinglePubkey(pubkey);
+			}
+			case "/cosmos.crypto.multisig.LegacyAminoPubKey": {
+				return this.anyToMultiPubkey(pubkey);
+			}
+			default:
+				throw new Error(`Pubkey type_url ${pubkey.typeUrl} not recognized`);
+		}
+	}
+
+  private anyToMultiPubkey(pubkey: Any): MultisigThresholdPubkey {
+		const { publicKeys, threshold } = LegacyAminoPubKey.decode(pubkey.value);
+		const keys = publicKeys.map((key) => this.anyToSinglePubkey(key));
+		return {
+			type: "tendermint/PubKeyMultisigThreshold",
+			value: {
+				pubkeys: keys,
+				threshold: String(threshold)
+			},
+		};
+	}
 
   private anyToSinglePubkey(pubkey: Any): SinglePubkey {
     switch (pubkey.typeUrl) {
