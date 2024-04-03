@@ -64,7 +64,6 @@ import { PubKey as CosmosCryptoEd25519Pubkey } from "cosmjs-types/cosmos/crypto/
 import { PubKey as CosmosCryptoSecp256k1Pubkey } from "cosmjs-types/cosmos/crypto/secp256k1/keys.js";
 import { PubKey as CommonPubKey } from "cosmjs-types/cosmos/crypto/secp256k1/keys.js";
 import { Secp256k1 } from "./compatability/secp256k1.js";
-import _m0 from "protobufjs/minimal.js";
 import {LegacyAminoPubKey} from "cosmjs-types/cosmos/crypto/multisig/keys"
 
 export function calculateDidFee(gasLimit: number, gasPrice: string | GasPrice): DidStdFee {
