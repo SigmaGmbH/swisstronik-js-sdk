@@ -3,8 +3,9 @@ import {
 	isOfflineDirectSigner,
 	OfflineSigner,
 	makeSignDoc,
+	makeAuthInfoBytes,
 } from "@cosmjs/proto-signing"
-import { Uint64 } from "@cosmjs/math";
+import { Uint53, Uint64 } from "@cosmjs/math";
 import {
 	DeliverTxResponse,
 	GasPrice,
@@ -15,7 +16,9 @@ import {
 	Account,
 	AccountParser,
 	SequenceResponse,
-	SignerData
+	SignerData,
+	AminoTypes,
+	createDefaultAminoConverters
 } from "@cosmjs/stargate"
 import { EthAccount } from "./types-proto/ethermint/types/v1/account.js";
 import { Tendermint34Client, Tendermint37Client } from "@cosmjs/tendermint-rpc"
@@ -45,7 +48,7 @@ import {
 	assert,
 	assertDefined
 } from '@cosmjs/utils'
-import { encodeSecp256k1Pubkey, Pubkey, SinglePubkey, encodeEd25519Pubkey, StdFee } from '@cosmjs/amino'
+import { encodeSecp256k1Pubkey, Pubkey, SinglePubkey, encodeEd25519Pubkey, StdFee, makeSignDoc as makeSignDocAmino, isSecp256k1Pubkey, isMultisigThresholdPubkey, MultisigThresholdPubkey } from '@cosmjs/amino'
 import { Int53 } from '@cosmjs/math'
 import { fromBase64 } from '@cosmjs/encoding'
 import {
@@ -61,6 +64,8 @@ import { PubKey as CosmosCryptoEd25519Pubkey } from "cosmjs-types/cosmos/crypto/
 import { PubKey as CosmosCryptoSecp256k1Pubkey } from "cosmjs-types/cosmos/crypto/secp256k1/keys.js";
 import { PubKey as CommonPubKey } from "cosmjs-types/cosmos/crypto/secp256k1/keys.js";
 import { Secp256k1 } from "./compatability/secp256k1.js";
+import _m0 from "protobufjs/minimal.js";
+import {LegacyAminoPubKey} from "cosmjs-types/cosmos/crypto/multisig/keys"
 
 export function calculateDidFee(gasLimit: number, gasPrice: string | GasPrice): DidStdFee {
 	return calculateFee(gasLimit, gasPrice)
@@ -103,6 +108,7 @@ export class SwisstronikSigningStargateClient extends SigningStargateClient {
 	private didSigners: TSignerAlgo = {}
 	private readonly _gasPrice: GasPrice | undefined
 	private readonly _signer: OfflineSigner
+	private readonly _aminoTypes: AminoTypes;
 
 	private readonly overridenAccountParser: AccountParser;
 
@@ -128,6 +134,14 @@ export class SwisstronikSigningStargateClient extends SigningStargateClient {
 		})
 	}
 
+	static async offline(signer: OfflineSigner, options: SigningStargateClientOptions | undefined = {}) {
+		console.log(`[sdk::signer.ts] Creating offline signer`);
+		return new SwisstronikSigningStargateClient(undefined, signer, {
+			registry: options?.registry ? options.registry : createDefaultIdentityRegistry(),
+			...options
+		})
+	}
+
 	constructor(
 		tmClient: Tendermint37Client | Tendermint34Client | undefined,
 		signer: OfflineSigner,
@@ -137,8 +151,9 @@ export class SwisstronikSigningStargateClient extends SigningStargateClient {
 		this._signer = signer
 		if (options.gasPrice) this._gasPrice = options.gasPrice
 
-		const { accountParser = this.accountFromAny } = options;
+		const { accountParser = this.accountFromAny, aminoTypes = new AminoTypes(createDefaultAminoConverters()), } = options;
 		this.overridenAccountParser = accountParser;
+		this._aminoTypes = aminoTypes;
 	}
 
 	public async signAndBroadcast(
@@ -183,8 +198,7 @@ export class SwisstronikSigningStargateClient extends SigningStargateClient {
 				chainId: chainId,
 			}
 		}
-
-		return this._signDirect(signerAddress, messages, fee, memo, signerData)
+		return isOfflineDirectSigner(this._signer)? this._signDirect(signerAddress, messages, fee, memo, signerData) : this._signAmino(signerAddress, messages, fee, memo, signerData);
 	}
 
 	public async getAccount(searchAddress: string): Promise<Account | null> {
@@ -253,6 +267,50 @@ export class SwisstronikSigningStargateClient extends SigningStargateClient {
 			authInfoBytes: signed.authInfoBytes,
 			signatures: [fromBase64(signature.signature)],
 		})
+	}
+
+	private async _signAmino(
+		signerAddress: string,
+		messages: readonly EncodeObject[],
+		fee: DidStdFee,
+		memo: string,
+		{ accountNumber, sequence, chainId }: SignerData,
+	) {
+		assert(!isOfflineDirectSigner(this._signer))
+
+		const accountFromSigner = (await this._signer.getAccounts()).find((account) => account.address === signerAddress);
+		if (!accountFromSigner) {
+				throw new Error("Failed to retrieve account from signer");
+		}
+
+		const pubkey = Any.fromPartial({
+			typeUrl: "/ethermint.crypto.v1.ethsecp256k1.PubKey",
+			value: CommonPubKey.encode({
+				key: accountFromSigner.pubkey
+			}).finish(),
+		})
+
+		const signMode = SignMode.SIGN_MODE_LEGACY_AMINO_JSON;
+		const msgs = messages.map((msg) => this._aminoTypes.toAmino(msg));
+		const signDoc = makeSignDocAmino(msgs, fee, chainId, memo, accountNumber, sequence);
+		const { signature, signed } = await this._signer.signAmino(signerAddress, signDoc);
+		const signedTxBody = {
+				messages: signed.msgs.map((msg) => this._aminoTypes.fromAmino(msg)),
+				memo: signed.memo,
+		};
+		const signedTxBodyEncodeObject = {
+				typeUrl: "/cosmos.tx.v1beta1.TxBody",
+				value: signedTxBody,
+		};
+		const signedTxBodyBytes = this.registry.encode(signedTxBodyEncodeObject);
+		const signedGasLimit = Int53.fromString(signed.fee.gas).toNumber();
+		const signedSequence = Int53.fromString(signed.sequence).toNumber();
+		const signedAuthInfoBytes = makeAuthInfoBytes([{ pubkey, sequence: signedSequence }], signed.fee.amount, signedGasLimit, signed.fee.granter, signed.fee.payer, signMode);
+		return TxRaw.fromPartial({
+				bodyBytes: signedTxBodyBytes,
+				authInfoBytes: signedAuthInfoBytes,
+				signatures: [fromBase64(signature.signature)],
+		});
 	}
 
 	async checkDidSigners(verificationMethods: Partial<VerificationMethod>[] = []): Promise<TSignerAlgo> {
@@ -384,9 +442,24 @@ export class SwisstronikSigningStargateClient extends SigningStargateClient {
 			case "/cosmos.crypto.ed25519.PubKey": {
 				return this.anyToSinglePubkey(pubkey);
 			}
+			case "/cosmos.crypto.multisig.LegacyAminoPubKey": {
+				return this.anyToMultiPubkey(pubkey);
+			}
 			default:
 				throw new Error(`Pubkey type_url ${pubkey.typeUrl} not recognized`);
 		}
+	}
+
+	private anyToMultiPubkey(pubkey: Any): MultisigThresholdPubkey {
+		const { publicKeys, threshold } = LegacyAminoPubKey.decode(pubkey.value);
+		const keys = publicKeys.map((key) => this.anyToSinglePubkey(key));
+		return {
+			type: "tendermint/PubKeyMultisigThreshold",
+			value: {
+				pubkeys: keys,
+				threshold: String(threshold)
+			},
+		};
 	}
 
 	private anyToSinglePubkey(pubkey: Any): SinglePubkey {
