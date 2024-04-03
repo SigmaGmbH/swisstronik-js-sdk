@@ -1,26 +1,21 @@
 import { pubkeyToAddress } from "./address";
 import {
   StdFee,
-  makeSignDoc as makeSignDocAmino,
   isSecp256k1Pubkey,
   isMultisigThresholdPubkey,
   MultisigThresholdPubkey,
   isEd25519Pubkey,
 } from "@cosmjs/amino";
 import { PubKey as Secp256k1PubKey } from "cosmjs-types/cosmos/crypto/secp256k1/keys.js";
-import {PubKey as Ed25519PubKey} from "cosmjs-types/cosmos/crypto/ed25519/keys.js";
+import { PubKey as Ed25519PubKey } from "cosmjs-types/cosmos/crypto/ed25519/keys.js";
 import { fromBase64 } from "@cosmjs/encoding";
 import { LegacyAminoPubKey } from "cosmjs-types/cosmos/crypto/multisig/keys";
-import { Uint53, Uint64 } from "@cosmjs/math";
+import { Uint53 } from "@cosmjs/math";
 import { Any } from "../types-proto/google/protobuf/any.js";
 import { makeCompactBitArray } from "@cosmjs/stargate/build/multisignature.js";
 import { SignMode } from "cosmjs-types/cosmos/tx/signing/v1beta1/signing.js";
 import Long from "long";
-import {
-  AuthInfo,
-  SignerInfo,
-  TxRaw,
-} from "cosmjs-types/cosmos/tx/v1beta1/tx.js";
+import { AuthInfo, TxRaw } from "cosmjs-types/cosmos/tx/v1beta1/tx.js";
 import { MultiSignature } from "cosmjs-types/cosmos/crypto/multisig/v1beta1/multisig.js";
 
 export function makeMultisignedTxBytes(
@@ -92,7 +87,7 @@ export function makeMultisignedTx(
 }
 
 function encodePubkey(pubkey: any) {
-  if (isSecp256k1Pubkey(pubkey)) {  
+  if (isSecp256k1Pubkey(pubkey)) {
     const pubkeyProto = Secp256k1PubKey.fromPartial({
       key: fromBase64(pubkey.value),
     });
@@ -105,14 +100,13 @@ function encodePubkey(pubkey: any) {
     return anyPubkey;
   } else if (isEd25519Pubkey(pubkey)) {
     const pubkeyProto = Ed25519PubKey.fromPartial({
-        key: fromBase64(pubkey.value),
+      key: fromBase64(pubkey.value),
     });
     return Any.fromPartial({
-        typeUrl: "/cosmos.crypto.ed25519.PubKey",
-        value: Uint8Array.from(Ed25519PubKey.encode(pubkeyProto).finish()),
+      typeUrl: "/cosmos.crypto.ed25519.PubKey",
+      value: Uint8Array.from(Ed25519PubKey.encode(pubkeyProto).finish()),
     });
-  }
-  else if (isMultisigThresholdPubkey(pubkey)) {
+  } else if (isMultisigThresholdPubkey(pubkey)) {
     const pubkeyProto = LegacyAminoPubKey.fromPartial({
       threshold: Uint53.fromString(pubkey.value.threshold).toNumber(),
       publicKeys: pubkey.value.pubkeys.map(encodePubkey),

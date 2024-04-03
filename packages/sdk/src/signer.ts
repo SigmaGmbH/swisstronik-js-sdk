@@ -5,7 +5,7 @@ import {
 	makeSignDoc,
 	makeAuthInfoBytes,
 } from "@cosmjs/proto-signing"
-import { Uint53, Uint64 } from "@cosmjs/math";
+import { Uint64 } from "@cosmjs/math";
 import {
 	DeliverTxResponse,
 	GasPrice,
