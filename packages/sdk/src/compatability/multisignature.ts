@@ -5,6 +5,7 @@ import {
   isMultisigThresholdPubkey,
   MultisigThresholdPubkey,
   isEd25519Pubkey,
+  Pubkey,
 } from "@cosmjs/amino";
 import { PubKey as Secp256k1PubKey } from "cosmjs-types/cosmos/crypto/secp256k1/keys.js";
 import { PubKey as Ed25519PubKey } from "cosmjs-types/cosmos/crypto/ed25519/keys.js";
@@ -86,7 +87,7 @@ export function makeMultisignedTx(
   return signedTx;
 }
 
-function encodePubkey(pubkey: any) {
+function encodePubkey(pubkey: Pubkey) {
   if (isSecp256k1Pubkey(pubkey)) {
     const pubkeyProto = Secp256k1PubKey.fromPartial({
       key: fromBase64(pubkey.value),

@@ -20,10 +20,10 @@ export function encodeAminoPubkey(pubkey: Pubkey) {
 
   if (isMultisigThresholdPubkey(pubkey)) {
       const out = Array.from(pubkeyAminoPrefixMultisigThreshold);
-      out.push(0x08); // TODO: What is this?
+      out.push(0x08); // https://github.com/cosmos/cosmjs/blob/v0.31.1/packages/amino/src/encoding.ts#L198
       out.push(...encodeUvarint(pubkey.value.threshold));
       for (const pubkeyData of pubkey.value.pubkeys.map((p) => encodeAminoPubkey(p))) {
-          out.push(0x12); // TODO: What is this?
+          out.push(0x12); // https://github.com/cosmos/cosmjs/blob/v0.31.1/packages/amino/src/encoding.ts#L201
           out.push(...encodeUvarint(pubkeyData.length));
           out.push(...pubkeyData);
       }
