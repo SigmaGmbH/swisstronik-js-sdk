@@ -1,7 +1,19 @@
 import pathModule from "path";
-import { esmCjsMaps } from "./esm-cjs-maps.js";
 // @ts-ignore
 import packageJson from "./package.json" assert { type: "json" };
+
+
+/*
+`esmCjsMaps` is a map of ESM package names to their CJS equivalents. 
+This is used to resolve ESM imports to CJS imports for CommonJS build.
+*/
+export const esmCjsMaps = {
+  "file-type": "file-type",
+  uint8arrays: "uint8arrays/dist/src",
+  "uint8arrays/to-string": "uint8arrays/dist/src/to-string.js",
+  multiformats: "multiformats/src",
+  "multiformats/basics": "multiformats/src/basics.js",
+} as Record<string, string>;
 
 /* 
 This is a polyfill for the "require" Commonjs function
