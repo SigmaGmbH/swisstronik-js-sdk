@@ -53,10 +53,10 @@ export const QueryVerificationDetailsResponse = {
         case 5:
           message.originalData = Buffer.from(reader.bytes()).toString("base64");
           break;
-        case 5:
+        case 6:
           message.proofSchema = reader.string();
           break;
-        case 5:
+        case 7:
           message.issuerVerificationId = reader.string();
           break;
         default:
