@@ -29,6 +29,10 @@ import {
   QueryIssuerDetailsRequest,
   QueryIssuerDetailsResponse,
 } from "./compliance/issuerDetails.js";
+import {
+  QueryVerificationDetailsRequest,
+  QueryVerificationDetailsResponse,
+} from "./compliance/verificationDetails.js";
 
 export class SwisstronikStargateClient extends StargateClient {
   private readonly overridenAccountParser: AccountParser;
@@ -165,5 +169,14 @@ export class SwisstronikStargateClient extends StargateClient {
     });
 
     return QueryIssuerDetailsResponse.decode(response.value);
+  }
+
+  public async queryVerificationDetails(verificationID: string) {
+    const response = await this.forceGetTmClient().abciQuery({
+      path: `/swisstronik.compliance.Query/VerificationDetails`,
+      data: QueryVerificationDetailsRequest.encode({ verificationID }).finish(),
+    });
+
+    return QueryVerificationDetailsResponse.decode(response.value);
   }
 }
