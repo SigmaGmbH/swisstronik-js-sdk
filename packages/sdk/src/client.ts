@@ -153,6 +153,7 @@ export class SwisstronikStargateClient extends StargateClient {
         );
     }
   }
+
   public async queryAddressDetails(address: string) {
     const response = await this.forceGetTmClient().abciQuery({
       path: `/swisstronik.compliance.Query/AddressDetails`,
