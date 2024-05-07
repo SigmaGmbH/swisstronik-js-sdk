@@ -11,16 +11,16 @@ export const verificationTypes = [
   "VT_CREDIT_SCORE",
 ] as const;
 
-export type VerificationResponse = {
+export type Verification = {
   type?: (typeof verificationTypes)[number];
   verificationId?: string;
   issuerAddress?: string;
 };
 
-export type AddressDetailsResponse = {
+export type AddressDetails = {
   isRevoked?: boolean;
   isVerified?: boolean;
-  verifications: VerificationResponse[];
+  verifications: Verification[];
 };
 
 export const QueryVerificationResponse = {
@@ -28,7 +28,7 @@ export const QueryVerificationResponse = {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
 
-    const message: VerificationResponse = {
+    const message: Verification = {
       type: undefined,
       verificationId: undefined,
       issuerAddress: undefined,
@@ -70,7 +70,7 @@ export const QueryAddressDetailsResponse = {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
 
-    const message: AddressDetailsResponse = {
+    const message: AddressDetails = {
       isRevoked: undefined,
       isVerified: undefined,
       verifications: [],
@@ -80,10 +80,10 @@ export const QueryAddressDetailsResponse = {
 
       switch (tag >>> 3) {
         case 1:
-          message.isRevoked = reader.bool();
-          break;
-        case 2:
           message.isVerified = reader.bool();
+          break;
+          case 2:
+          message.isRevoked = reader.bool();
           break;
         case 3:
           message.verifications.push(

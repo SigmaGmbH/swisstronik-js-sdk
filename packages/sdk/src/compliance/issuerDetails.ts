@@ -1,6 +1,6 @@
 import _m0 from "protobufjs/minimal.js";
 
-export type IssuerDetailsResponse = {
+export type IssuerDetails = {
   name?: string;
   description?: string;
   url?: string;
@@ -22,7 +22,7 @@ export const QueryIssuerDetailsResponse = {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
 
-    const message: IssuerDetailsResponse = {
+    const message: IssuerDetails = {
       name: undefined,
       description: undefined,
       url: undefined,
