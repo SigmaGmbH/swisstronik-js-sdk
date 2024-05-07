@@ -21,6 +21,18 @@ import { PubKey as CosmosCryptoSecp256k1Pubkey } from "cosmjs-types/cosmos/crypt
 import { PubKey as CommonPubKey } from "cosmjs-types/cosmos/crypto/secp256k1/keys.js";
 import { Secp256k1 } from "./compatability/secp256k1.js";
 import { LegacyAminoPubKey } from "cosmjs-types/cosmos/crypto/multisig/keys.js";
+import {
+  QueryAddressDetailsRequest,
+  QueryAddressDetailsResponse,
+} from "./compliance/addressDetails.js";
+import {
+  QueryIssuerDetailsRequest,
+  QueryIssuerDetailsResponse,
+} from "./compliance/issuerDetails.js";
+import {
+  QueryVerificationDetailsRequest,
+  QueryVerificationDetailsResponse,
+} from "./compliance/verificationDetails.js";
 
 export class SwisstronikStargateClient extends StargateClient {
   private readonly overridenAccountParser: AccountParser;
@@ -94,32 +106,32 @@ export class SwisstronikStargateClient extends StargateClient {
     return Uint64.fromString(input.toString());
   }
 
-	private decodePubkey(pubkey: Any): Pubkey {
-		switch (pubkey.typeUrl) {
-			case "/ethermint.crypto.v1.ethsecp256k1.PubKey":
-			case "/cosmos.crypto.secp256k1.PubKey":
-			case "/cosmos.crypto.ed25519.PubKey": {
-				return this.anyToSinglePubkey(pubkey);
-			}
-			case "/cosmos.crypto.multisig.LegacyAminoPubKey": {
-				return this.anyToMultiPubkey(pubkey);
-			}
-			default:
-				throw new Error(`Pubkey type_url ${pubkey.typeUrl} not recognized`);
-		}
-	}
+  private decodePubkey(pubkey: Any): Pubkey {
+    switch (pubkey.typeUrl) {
+      case "/ethermint.crypto.v1.ethsecp256k1.PubKey":
+      case "/cosmos.crypto.secp256k1.PubKey":
+      case "/cosmos.crypto.ed25519.PubKey": {
+        return this.anyToSinglePubkey(pubkey);
+      }
+      case "/cosmos.crypto.multisig.LegacyAminoPubKey": {
+        return this.anyToMultiPubkey(pubkey);
+      }
+      default:
+        throw new Error(`Pubkey type_url ${pubkey.typeUrl} not recognized`);
+    }
+  }
 
   private anyToMultiPubkey(pubkey: Any): MultisigThresholdPubkey {
-		const { publicKeys, threshold } = LegacyAminoPubKey.decode(pubkey.value);
-		const keys = publicKeys.map((key) => this.anyToSinglePubkey(key));
-		return {
-			type: "tendermint/PubKeyMultisigThreshold",
-			value: {
-				pubkeys: keys,
-				threshold: String(threshold)
-			},
-		};
-	}
+    const { publicKeys, threshold } = LegacyAminoPubKey.decode(pubkey.value);
+    const keys = publicKeys.map((key) => this.anyToSinglePubkey(key));
+    return {
+      type: "tendermint/PubKeyMultisigThreshold",
+      value: {
+        pubkeys: keys,
+        threshold: String(threshold),
+      },
+    };
+  }
 
   private anyToSinglePubkey(pubkey: Any): SinglePubkey {
     switch (pubkey.typeUrl) {
@@ -140,5 +152,32 @@ export class SwisstronikStargateClient extends StargateClient {
           `Pubkey type_url ${pubkey.typeUrl} not recognized as single public key type`
         );
     }
+  }
+
+  public async queryAddressDetails(address: string) {
+    const response = await this.forceGetTmClient().abciQuery({
+      path: `/swisstronik.compliance.Query/AddressDetails`,
+      data: QueryAddressDetailsRequest.encode({ address }).finish(),
+    });
+
+    return QueryAddressDetailsResponse.decode(response.value);
+  }
+
+  public async queryIssuerDetails(issuerAddress: string) {
+    const response = await this.forceGetTmClient().abciQuery({
+      path: `/swisstronik.compliance.Query/IssuerDetails`,
+      data: QueryIssuerDetailsRequest.encode({ issuerAddress }).finish(),
+    });
+
+    return QueryIssuerDetailsResponse.decode(response.value);
+  }
+
+  public async queryVerificationDetails(verificationID: string) {
+    const response = await this.forceGetTmClient().abciQuery({
+      path: `/swisstronik.compliance.Query/VerificationDetails`,
+      data: QueryVerificationDetailsRequest.encode({ verificationID }).finish(),
+    });
+
+    return QueryVerificationDetailsResponse.decode(response.value);
   }
 }
