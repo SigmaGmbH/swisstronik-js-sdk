@@ -24,16 +24,22 @@ import { LegacyAminoPubKey } from "cosmjs-types/cosmos/crypto/multisig/keys.js";
 import {
   QueryAddressDetailsRequest,
   QueryAddressDetailsResponse,
+  QueryAddressListRequest,
+  QueryAddressListResponse,
 } from "./compliance/addressDetails.js";
 import {
   QueryIssuerDetailsRequest,
   QueryIssuerDetailsResponse,
+  QueryIssuerListRequest,
+  QueryIssuerListResponse,
 } from "./compliance/issuerDetails.js";
 import {
   QueryVerificationDetailsRequest,
   QueryVerificationDetailsResponse,
+  QueryVerificationListRequest,
+  QueryVerificationListResponse,
 } from "./compliance/verificationDetails.js";
-
+import { PageRequest } from "cosmjs-types/cosmos/base/query/v1beta1/pagination.js";
 export class SwisstronikStargateClient extends StargateClient {
   private readonly overridenAccountParser: AccountParser;
 
@@ -163,6 +169,15 @@ export class SwisstronikStargateClient extends StargateClient {
     return QueryAddressDetailsResponse.decode(response.value);
   }
 
+  public async queryAddressList(pagination?: PageRequest) {
+    const response = await this.forceGetTmClient().abciQuery({
+      path: `/swisstronik.compliance.Query/AddressesDetails`,
+      data: QueryAddressListRequest.encode({ pagination }).finish(),
+    });
+
+    return QueryAddressListResponse.decode(response.value);
+  }
+
   public async queryIssuerDetails(issuerAddress: string) {
     const response = await this.forceGetTmClient().abciQuery({
       path: `/swisstronik.compliance.Query/IssuerDetails`,
@@ -172,6 +187,15 @@ export class SwisstronikStargateClient extends StargateClient {
     return QueryIssuerDetailsResponse.decode(response.value);
   }
 
+  public async queryIssuerList(pagination?: PageRequest) {
+    const response = await this.forceGetTmClient().abciQuery({
+      path: `/swisstronik.compliance.Query/IssuersDetails`,
+      data: QueryIssuerListRequest.encode({ pagination }).finish(),
+    });
+
+    return QueryIssuerListResponse.decode(response.value);
+  }
+
   public async queryVerificationDetails(verificationID: string) {
     const response = await this.forceGetTmClient().abciQuery({
       path: `/swisstronik.compliance.Query/VerificationDetails`,
@@ -179,5 +203,14 @@ export class SwisstronikStargateClient extends StargateClient {
     });
 
     return QueryVerificationDetailsResponse.decode(response.value);
+  }
+
+  public async queryVerificationList(pagination?: PageRequest) {
+    const response = await this.forceGetTmClient().abciQuery({
+      path: `/swisstronik.compliance.Query/VerificationsDetails`,
+      data: QueryVerificationListRequest.encode({ pagination }).finish(),
+    });
+
+    return QueryVerificationListResponse.decode(response.value);
   }
 }
