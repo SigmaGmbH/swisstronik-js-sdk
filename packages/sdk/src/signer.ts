@@ -65,9 +65,25 @@ import { PubKey as CosmosCryptoSecp256k1Pubkey } from "cosmjs-types/cosmos/crypt
 import { PubKey as CommonPubKey } from "cosmjs-types/cosmos/crypto/secp256k1/keys.js";
 import { Secp256k1 } from "./compatability/secp256k1.js";
 import {LegacyAminoPubKey} from "cosmjs-types/cosmos/crypto/multisig/keys.js"
-import { QueryAddressDetailsRequest, QueryAddressDetailsResponse } from "./compliance/addressDetails.js";
-import { QueryIssuerDetailsRequest, QueryIssuerDetailsResponse } from "./compliance/issuerDetails.js";
-import { QueryVerificationDetailsRequest, QueryVerificationDetailsResponse } from "./compliance/verificationDetails.js";
+import {
+  QueryAddressDetailsRequest,
+  QueryAddressDetailsResponse,
+  QueryAddressListRequest,
+  QueryAddressListResponse,
+} from "./compliance/addressDetails.js";
+import {
+  QueryIssuerDetailsRequest,
+  QueryIssuerDetailsResponse,
+  QueryIssuerListRequest,
+  QueryIssuerListResponse,
+} from "./compliance/issuerDetails.js";
+import {
+  QueryVerificationDetailsRequest,
+  QueryVerificationDetailsResponse,
+  QueryVerificationListRequest,
+  QueryVerificationListResponse,
+} from "./compliance/verificationDetails.js";
+import { PageRequest } from "cosmjs-types/cosmos/base/query/v1beta1/pagination.js";
 
 export function calculateDidFee(gasLimit: number, gasPrice: string | GasPrice): DidStdFee {
 	return calculateFee(gasLimit, gasPrice)
@@ -483,6 +499,7 @@ export class SwisstronikSigningStargateClient extends SigningStargateClient {
 		}
 	}
 
+
 	public async queryAddressDetails(address: string) {
     const response = await this.forceGetTmClient().abciQuery({
       path: `/swisstronik.compliance.Query/AddressDetails`,
@@ -490,6 +507,15 @@ export class SwisstronikSigningStargateClient extends SigningStargateClient {
     });
 
     return QueryAddressDetailsResponse.decode(response.value);
+  }
+
+  public async queryAddressList(pagination?: PageRequest) {
+    const response = await this.forceGetTmClient().abciQuery({
+      path: `/swisstronik.compliance.Query/AddressesDetails`,
+      data: QueryAddressListRequest.encode({ pagination }).finish(),
+    });
+
+    return QueryAddressListResponse.decode(response.value);
   }
 
   public async queryIssuerDetails(issuerAddress: string) {
@@ -501,6 +527,15 @@ export class SwisstronikSigningStargateClient extends SigningStargateClient {
     return QueryIssuerDetailsResponse.decode(response.value);
   }
 
+  public async queryIssuerList(pagination?: PageRequest) {
+    const response = await this.forceGetTmClient().abciQuery({
+      path: `/swisstronik.compliance.Query/IssuersDetails`,
+      data: QueryIssuerListRequest.encode({ pagination }).finish(),
+    });
+
+    return QueryIssuerListResponse.decode(response.value);
+  }
+
   public async queryVerificationDetails(verificationID: string) {
     const response = await this.forceGetTmClient().abciQuery({
       path: `/swisstronik.compliance.Query/VerificationDetails`,
@@ -508,5 +543,14 @@ export class SwisstronikSigningStargateClient extends SigningStargateClient {
     });
 
     return QueryVerificationDetailsResponse.decode(response.value);
+  }
+
+  public async queryVerificationList(pagination?: PageRequest) {
+    const response = await this.forceGetTmClient().abciQuery({
+      path: `/swisstronik.compliance.Query/VerificationsDetails`,
+      data: QueryVerificationListRequest.encode({ pagination }).finish(),
+    });
+
+    return QueryVerificationListResponse.decode(response.value);
   }
 }
