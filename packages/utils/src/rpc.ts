@@ -2,7 +2,6 @@ import axios, { AxiosError } from 'axios'
 
 interface GetNodePublicKeyOptions {
   blockNumber?: string
-  blockHash?: string
 }
 
 interface GetNodePublicKeyResult {
@@ -14,22 +13,17 @@ export async function getNodePublicKey(
   rpcEndpoint: string,
   options?: GetNodePublicKeyOptions
 ): Promise<GetNodePublicKeyResult> {
-  let blockNumOrHash = 'latest'
+  let blockNumber = 'latest';
   if (options) {
-    if (options.blockHash) {
-      blockNumOrHash = options.blockHash
-    }
-
-    if (options.blockNumber) {
-      blockNumOrHash = options.blockNumber
-    }
+      if (options.blockNumber) {
+          blockNumber = options.blockNumber;
+      }
   }
-
   const requestData = {
     id: 1,
     jsonrpc: '2.0',
     method: 'eth_getNodePublicKey',
-    params: [blockNumOrHash],
+    params: [blockNumber],
   }
 
   try {
