@@ -120,6 +120,12 @@ export const QueryAddressDetailsResponse = {
       isVerified: undefined,
       verifications: [],
     };
+
+    if (length === undefined) {
+      reader.uint32();
+      reader.uint32();
+    }
+    
     while (reader.pos < end) {
       const tag = reader.uint32();
 
