@@ -5,6 +5,7 @@ import {
 import _m0 from "protobufjs/minimal.js";
 
 export const verificationTypes = [
+  "VT_UNSPECIFIED",
   "VT_KYC",
   "VT_KYB",
   "VT_KYW",
