@@ -1,5 +1,5 @@
 import { bech32 } from 'bech32';
-import {hexToU8a, u8aToHex} from "./utils";
+import {hexToU8a, u8aToHex} from "./utils.js";
 const { encode, decode, toWords, fromWords } = bech32;
 
 const SWTR_PREFIX = "swtr"

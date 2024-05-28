@@ -3,9 +3,9 @@ import {
   encryptECDH,
   USER_KEY_PREFIX,
   decryptECDH,
-} from './encryption'
-import {stringToU8a, hexToU8a, u8aToHex} from './utils'
-import {getNodePublicKey} from './rpc'
+} from './encryption.js'
+import {stringToU8a, hexToU8a, u8aToHex} from './utils.js'
+import {getNodePublicKey} from './rpc.js'
 import {randomBytes} from 'tweetnacl'
 
 

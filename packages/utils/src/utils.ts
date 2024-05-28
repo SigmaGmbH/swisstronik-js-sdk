@@ -1,4 +1,4 @@
-import { xglobal } from './global'
+import { xglobal } from './global.js'
 
 export const REGEX_HEX_PREFIXED = /^0x[\da-fA-F]+$/
 export const REGEX_HEX_NOPREFIX = /^[\da-fA-F]+$/

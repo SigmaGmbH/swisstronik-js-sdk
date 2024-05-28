@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import rlp from 'rlp';
-import { VerifiableCredential } from "./types";
-import { u8aToHex } from "../utils";
+import { VerifiableCredential } from "./types.js";
+import { u8aToHex } from "../utils.js";
 
 /**
  * Encodes provided Verifiable Credential to RLP format

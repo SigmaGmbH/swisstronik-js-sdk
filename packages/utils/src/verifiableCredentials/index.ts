@@ -1,4 +1,4 @@
 export {
     encodeVerifiableCredentialToRLP,
     encodeTxDataWithVC
-} from './coder'
+} from './coder.js'
