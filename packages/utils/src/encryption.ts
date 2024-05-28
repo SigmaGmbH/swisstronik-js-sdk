@@ -3,7 +3,7 @@ import { sha256 } from '@noble/hashes/sha256'
 import * as nacl from 'tweetnacl'
 import * as deoxysii from '@oasisprotocol/deoxysii'
 import { randomBytes } from 'tweetnacl'
-import { stringToU8a, u8aConcat } from './utils'
+import { stringToU8a, u8aConcat } from './utils.js'
 
 export const TX_KEY_PREFIX = 'IOEncryptionKeyV1'
 export const USER_KEY_PREFIX = 'UserEncryptionKeyV1'
