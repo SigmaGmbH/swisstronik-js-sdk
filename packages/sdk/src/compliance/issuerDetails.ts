@@ -12,10 +12,9 @@ export type IssuerDetails = {
   legalEntity?: string;
 };
 
-export type IssuerDetailsWithKey = {
+export type MergedIssuerDetails = {
   issuerAddress: string;
-  issuerDetails: IssuerDetails;
-};
+} & IssuerDetails;
 
 export const QueryIssuerListRequest = {
   encode(message: { pagination?: PageRequest }, writer = _m0.Writer.create()) {
@@ -32,7 +31,7 @@ export const QueryIssuerListResponse = {
     const end = length === undefined ? reader.len : reader.pos + length;
 
     const message = {
-      issuers: [] as IssuerDetailsWithKey[],
+      issuers: [] as MergedIssuerDetails[],
       pagination: undefined as any as PageResponse,
     };
 
@@ -42,7 +41,7 @@ export const QueryIssuerListResponse = {
       switch (tag >>> 3) {
         case 1:
           message.issuers.push(
-            QueryIssuerDetailsWithKey.decode(reader, reader.uint32())
+            QueryMergedIssuerDetails.decode(reader, reader.uint32())
           );
           break;
         case 2:
@@ -57,12 +56,12 @@ export const QueryIssuerListResponse = {
   },
 };
 
-export const QueryIssuerDetailsWithKey = {
+export const QueryMergedIssuerDetails = {
   decode(input: _m0.Reader | Uint8Array, length?: number) {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
 
-    const message = {} as IssuerDetailsWithKey;
+    const message = {} as MergedIssuerDetails;
 
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -72,10 +71,19 @@ export const QueryIssuerDetailsWithKey = {
           message.issuerAddress = reader.string();
           break;
         case 2:
-          message.issuerDetails = QueryIssuerDetailsResponse.decode(
-            reader,
-            reader.uint32()
-          );
+          message.name = reader.string();
+          break;
+        case 3:
+          message.description = reader.string();
+          break;
+        case 4:
+          message.url = reader.string();
+          break;
+        case 5:
+          message.logo = reader.string();
+          break;
+        case 6:
+          message.legalEntity = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
