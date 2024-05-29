@@ -3,34 +3,22 @@ import {
   PageResponse,
 } from "cosmjs-types/cosmos/base/query/v1beta1/pagination.js";
 import _m0 from "protobufjs/minimal.js";
+import { verificationTypes } from "./verificationDetails";
 
-export const verificationTypes = [
-  "VT_UNSPECIFIED",
-  "VT_KYC",
-  "VT_KYB",
-  "VT_KYW",
-  "VT_HUMANITY",
-  "VT_AML",
-  "VT_ADDRESS",
-  "VT_CUSTOM",
-  "VT_CREDIT_SCORE",
-] as const;
+export type AddressDetails = {
+  isVerified?: boolean;
+  isRevoked?: boolean;
+  verifications: Verification[];
+};
+
+export type MergedAddressDetails = {
+  address: string;
+} & AddressDetails;
 
 export type Verification = {
   type: (typeof verificationTypes)[number];
   verificationId: string;
   issuerAddress: string;
-};
-
-export type AddressDetails = {
-  isRevoked?: boolean;
-  isVerified?: boolean;
-  verifications: Verification[];
-};
-
-export type AddressDetailsWithKey = {
-  address: string;
-  addressDetails: AddressDetails;
 };
 
 export const QueryAddressListRequest = {
@@ -48,7 +36,7 @@ export const QueryAddressListResponse = {
     const end = length === undefined ? reader.len : reader.pos + length;
 
     const message = {
-      addresses: [] as AddressDetailsWithKey[],
+      addresses: [] as MergedAddressDetails[],
       pagination: undefined as any as PageResponse,
     };
 
@@ -58,7 +46,7 @@ export const QueryAddressListResponse = {
       switch (tag >>> 3) {
         case 1:
           message.addresses.push(
-            queryAddressDetailsWithKey.decode(reader, reader.uint32())
+            queryMergedAddressDetails.decode(reader, reader.uint32())
           );
           break;
         case 2:
@@ -73,12 +61,14 @@ export const QueryAddressListResponse = {
   },
 };
 
-const queryAddressDetailsWithKey = {
+const queryMergedAddressDetails = {
   decode(input: _m0.Reader | Uint8Array, length?: number) {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
 
-    const message = {} as AddressDetailsWithKey;
+    const message = {
+      verifications: [] as Verification[],
+    } as MergedAddressDetails;
 
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -88,9 +78,14 @@ const queryAddressDetailsWithKey = {
           message.address = reader.string();
           break;
         case 2:
-          message.addressDetails = QueryAddressDetailsResponse.decode(
-            reader,
-            reader.uint32()
+          message.isVerified = reader.bool();
+          break;
+        case 3:
+          message.isRevoked = reader.bool();
+          break;
+        case 4:
+          message.verifications.push(
+            QueryVerificationResponse.decode(reader, reader.uint32())
           );
           break;
         default:
@@ -117,8 +112,6 @@ export const QueryAddressDetailsResponse = {
     let end = length === undefined ? reader.len : reader.pos + length;
 
     const message: AddressDetails = {
-      isRevoked: undefined,
-      isVerified: undefined,
       verifications: [],
     };
 
@@ -126,7 +119,7 @@ export const QueryAddressDetailsResponse = {
       reader.uint32();
       reader.uint32();
     }
-    
+
     while (reader.pos < end) {
       const tag = reader.uint32();
 
