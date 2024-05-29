@@ -4,20 +4,33 @@ import {
 } from "cosmjs-types/cosmos/base/query/v1beta1/pagination.js";
 import _m0 from "protobufjs/minimal.js";
 
+export const verificationTypes = [
+  "VT_UNSPECIFIED",
+  "VT_KYC",
+  "VT_KYB",
+  "VT_KYW",
+  "VT_HUMANITY",
+  "VT_AML",
+  "VT_ADDRESS",
+  "VT_CUSTOM",
+  "VT_CREDIT_SCORE",
+] as const;
+
 export type VerificationDetails = {
+  type: (typeof verificationTypes)[number];
   issuerAddress?: string;
   originChain?: string;
   issuanceTimestamp?: number;
   expirationTimestamp?: number;
   originalData?: string;
-  proofSchema?: string;
+  schema?: string;
   issuerVerificationId?: string;
+  version?: number;
 };
 
-export type VerificationDetailsWithKey = {
+export type MergedVerificationDetails = {
   verificationID: string;
-  verificationDetails: VerificationDetails;
-};
+} & VerificationDetails;
 
 export const QueryVerificationListRequest = {
   encode(message: { pagination?: PageRequest }, writer = _m0.Writer.create()) {
@@ -34,7 +47,7 @@ export const QueryVerificationListResponse = {
     const end = length === undefined ? reader.len : reader.pos + length;
 
     const message = {
-      verifications: [] as VerificationDetailsWithKey[],
+      verifications: [] as MergedVerificationDetails[],
       pagination: undefined as any as PageResponse,
     };
 
@@ -44,7 +57,7 @@ export const QueryVerificationListResponse = {
       switch (tag >>> 3) {
         case 1:
           message.verifications.push(
-            QueryVerificationDetailsWithKey.decode(reader, reader.uint32())
+            QueryMergedVerificationDetails.decode(reader, reader.uint32())
           );
           break;
         case 2:
@@ -59,25 +72,48 @@ export const QueryVerificationListResponse = {
   },
 };
 
-export const QueryVerificationDetailsWithKey = {
+export const QueryMergedVerificationDetails = {
   decode(input: _m0.Reader | Uint8Array, length?: number) {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
 
-    const message = {} as VerificationDetailsWithKey;
+    const message = {} as MergedVerificationDetails;
 
     while (reader.pos < end) {
       const tag = reader.uint32();
 
       switch (tag >>> 3) {
         case 1:
-          message.verificationID = Buffer.from(reader.bytes()).toString("base64");
+          message.type = verificationTypes[reader.uint32()];
           break;
         case 2:
-          message.verificationDetails = QueryVerificationDetailsResponse.decode(
-            reader,
-            reader.uint32()
+          message.verificationID = Buffer.from(reader.bytes()).toString(
+            "base64"
           );
+          break;
+        case 3:
+          message.issuerAddress = reader.string();
+          break;
+        case 4:
+          message.originChain = reader.string();
+          break;
+        case 5:
+          message.issuanceTimestamp = reader.uint32();
+          break;
+        case 6:
+          message.expirationTimestamp = reader.uint32();
+          break;
+        case 7:
+          message.originalData = Buffer.from(reader.bytes()).toString("base64");
+          break;
+        case 8:
+          message.schema = reader.string();
+          break;
+        case 9:
+          message.issuerVerificationId = reader.string();
+          break;
+        case 10:
+          message.version = reader.uint32();
           break;
         default:
           reader.skipType(tag & 7);
@@ -102,15 +138,7 @@ export const QueryVerificationDetailsResponse = {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
 
-    const message: VerificationDetails = {
-      issuerAddress: undefined,
-      originChain: undefined,
-      issuanceTimestamp: undefined,
-      expirationTimestamp: undefined,
-      originalData: undefined,
-      proofSchema: undefined,
-      issuerVerificationId: undefined,
-    };
+    const message = {} as VerificationDetails;
 
     if (length === undefined) {
       reader.uint32();
@@ -122,25 +150,31 @@ export const QueryVerificationDetailsResponse = {
 
       switch (tag >>> 3) {
         case 1:
-          message.issuerAddress = reader.string();
+          message.type = verificationTypes[reader.uint32()];
           break;
         case 2:
-          message.originChain = reader.string();
+          message.issuerAddress = reader.string();
           break;
         case 3:
-          message.issuanceTimestamp = reader.uint32();
+          message.originChain = reader.string();
           break;
         case 4:
-          message.expirationTimestamp = reader.uint32();
+          message.issuanceTimestamp = reader.uint32();
           break;
         case 5:
-          message.originalData = Buffer.from(reader.bytes()).toString("base64");
+          message.expirationTimestamp = reader.uint32();
           break;
         case 6:
-          message.proofSchema = reader.string();
+          message.originalData = Buffer.from(reader.bytes()).toString("base64");
           break;
         case 7:
+          message.schema = reader.string();
+          break;
+        case 8:
           message.issuerVerificationId = reader.string();
+          break;
+        case 9:
+          message.version = reader.uint32();
           break;
         default:
           reader.skipType(tag & 7);
