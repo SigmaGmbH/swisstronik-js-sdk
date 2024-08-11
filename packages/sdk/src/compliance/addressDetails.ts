@@ -3,7 +3,7 @@ import {
   PageResponse,
 } from "cosmjs-types/cosmos/base/query/v1beta1/pagination.js";
 import _m0 from "protobufjs/minimal.js";
-import { verificationTypes } from "./verificationDetails";
+import { verificationTypes } from "./verificationDetails.js";
 
 export type AddressDetails = {
   isVerified?: boolean;
