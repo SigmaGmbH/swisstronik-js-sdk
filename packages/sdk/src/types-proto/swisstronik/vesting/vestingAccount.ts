@@ -1,8 +1,8 @@
 /* eslint-disable */
-import { BaseAccount } from "cosmjs-types/cosmos/auth/v1beta1/auth";
-import { Coin } from "cosmjs-types/cosmos/base/v1beta1/coin";
+import { BaseAccount } from "cosmjs-types/cosmos/auth/v1beta1/auth.js";
+import { Coin } from "cosmjs-types/cosmos/base/v1beta1/coin.js";
 import Long from "long";
-import _m0 from "protobufjs/minimal";
+import _m0 from "protobufjs/minimal.js";
 
 export const protobufPackage = "cosmos.vesting.v1beta1";
 
