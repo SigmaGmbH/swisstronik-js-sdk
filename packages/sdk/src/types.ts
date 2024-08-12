@@ -10,7 +10,6 @@ import { DIDResolutionResult } from "did-resolver";
 import { DidExtension } from "./modules/did.js";
 import { ResourceExtension } from "./modules/resource.js";
 import { MonthlyVestingAccount } from "./types-proto/swisstronik/vesting/monthlyVestingAccount";
-import { BaseVestingAccount } from "./types-proto/swisstronik/vesting/vestingAccount";
 export {
   DIDDocument as DIDDocumentExternal,
   VerificationMethod as VerificationMethodExternal,
