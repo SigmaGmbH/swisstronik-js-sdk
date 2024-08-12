@@ -1,6 +1,6 @@
 {
   "name": "@swisstronik/sdk",
-  "version": "1.16.0",
+  "version": "1.17.0",
   "description": "TypeScript SDK for Swisstronik Network",
   "license": "Apache-2.0",
   "source": "src/index.ts",

@@ -1,10 +1,6 @@
-/* eslint-disable */
-import {
-  BaseVestingAccount,
-  Period,
-} from "./vestingAccount.js";
 import Long from "long";
 import _m0 from "protobufjs/minimal.js";
+import { BaseVestingAccount, Period } from "cosmjs-types/cosmos/vesting/v1beta1/vesting.js";
 
 export const protobufPackage = "swisstronik.vesting";
 

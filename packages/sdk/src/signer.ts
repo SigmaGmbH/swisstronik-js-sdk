@@ -18,7 +18,6 @@ import {
 	SignerData,
 	AminoTypes,
 	createDefaultAminoConverters,
-	accountFromAny
 } from "@cosmjs/stargate"
 import { Tendermint34Client, Tendermint37Client } from "@cosmjs/tendermint-rpc"
 import { createDefaultIdentityRegistry } from "./registry.js"
@@ -79,6 +78,7 @@ import {
   QueryVerificationListResponse,
 } from "./compliance/verificationDetails.js";
 import { PageRequest } from "cosmjs-types/cosmos/base/query/v1beta1/pagination.js";
+import { accountFromAny } from "./utils.js";
 
 export function calculateDidFee(gasLimit: number, gasPrice: string | GasPrice): DidStdFee {
 	return calculateFee(gasLimit, gasPrice)
