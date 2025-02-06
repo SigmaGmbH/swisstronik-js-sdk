@@ -1,3 +1,4 @@
+import { toString } from 'uint8arrays/to-string';
 import {
   PageRequest,
   PageResponse,
@@ -32,6 +33,7 @@ export const QueryAddressListRequest = {
 
 export const QueryAddressListResponse = {
   decode(input: _m0.Reader | Uint8Array, length?: number) {
+ 
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
 
@@ -40,14 +42,20 @@ export const QueryAddressListResponse = {
       pagination: undefined as any as PageResponse,
     };
 
+    console.log('many', reader);
+    
+
     while (reader.pos < end) {
       const tag = reader.uint32();
+      
+      // console.log('all tag', tag, tag >>> 3);
+
 
       switch (tag >>> 3) {
         case 1:
-          message.addresses.push(
-            queryMergedAddressDetails.decode(reader, reader.uint32())
-          );
+          const addrDecode = queryMergedAddressDetails.decode(reader, reader.uint32())
+          // console.log("🚀 ~ decode ~ addrDecode:", addrDecode)
+          message.addresses.push( addrDecode);
           break;
         case 2:
           message.pagination = PageResponse.decode(reader, reader.uint32());
@@ -72,7 +80,7 @@ const queryMergedAddressDetails = {
 
     while (reader.pos < end) {
       const tag = reader.uint32();
-
+      // console.log('tag', tag, tag >>> 3)
       switch (tag >>> 3) {
         case 1:
           message.address = reader.string();
@@ -98,7 +106,9 @@ const queryMergedAddressDetails = {
 };
 
 export const QueryAddressDetailsRequest = {
+
   encode(message: { address: string }, writer = _m0.Writer.create()) {
+
     if (message.address !== "") {
       writer.uint32(10).string(message.address);
     }
@@ -119,11 +129,13 @@ export const QueryAddressDetailsResponse = {
       reader.uint32();
       reader.uint32();
     }
+    console.log('QueryAddressDetailsResponse:input,reader.buf', reader, reader.buf)
 
     while (reader.pos < end) {
       const tag = reader.uint32();
-
+      console.log('tag', tag, tag >>> 3)
       switch (tag >>> 3) {
+    
         case 1:
           message.isVerified = reader.bool();
           break;

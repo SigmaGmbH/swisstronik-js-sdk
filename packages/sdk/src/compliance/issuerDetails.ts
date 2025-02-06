@@ -108,6 +108,8 @@ export const QueryIssuerDetailsResponse = {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     const end = length === undefined ? reader.len : reader.pos + length;
 
+    console.log('QueryIssuerDetailsResponse:input,reader.buf', input, reader.buf)
+
     const message: IssuerDetails = {
       name: undefined,
       description: undefined,
@@ -120,6 +122,8 @@ export const QueryIssuerDetailsResponse = {
       reader.uint32();
       reader.uint32();
     }
+
+    console.log('issuer tag', reader.pos, end, reader.buf);
 
     while (reader.pos < end) {
       const tag = reader.uint32();
