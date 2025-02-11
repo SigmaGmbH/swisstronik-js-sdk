@@ -188,6 +188,7 @@ export type IssuerDetails = {
   url?: string;
   logo?: string;
   legalEntity?: string;
+  creator?: string;
 };
 
 export type MergedIssuerDetails = {

@@ -111,13 +111,15 @@ export const QueryAddressDetailsResponse = {
       const tag = reader.uint32();
 
       switch (tag >>> 3) {
-        case 1:
+        // case 1:
+        //   message.address = reader.string();
+        case 2:
           message.isVerified = reader.bool();
           break;
-        case 2:
+        case 3:
           message.isRevoked = reader.bool();
           break;
-        case 3:
+        case 4:
           message.verifications.push(
             QueryVerificationResponse.decode(reader, reader.uint32())
           );

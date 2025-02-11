@@ -75,6 +75,9 @@ export const QueryMergedIssuerDetails = {
         case 6:
           message.legalEntity = reader.string();
           break;
+        case 7:
+          message.creator = reader.string();
+          break;  
         default:
           reader.skipType(tag & 7);
           break;

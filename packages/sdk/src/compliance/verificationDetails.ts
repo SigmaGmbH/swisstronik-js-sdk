@@ -5,29 +5,7 @@ import {
 import _m0 from "protobufjs/minimal.js";
 import { MergedVerificationDetails, VerificationDetails, VerificationType } from '..';
 
-export const verificationTypes = [
-  /** VT_UNSPECIFIED - VT_UNSPECIFIED defines an invalid/undefined verification type. */
-  "VT_UNSPECIFIED",
-  /** VT_KYC - Know Your Customer */
-  "VT_KYC",
-  /** VT_KYB - Know Your Business */
-  "VT_KYB",
-  /** VT_KYW - Know Your Wallet */
-  "VT_KYW",
-  "VT_HUMANITY",
-  /** VT_AML - Anti Money Laundering (check transactions) */
-  "VT_AML",
-  "VT_ADDRESS",
-  "VT_CUSTOM",
-  "VT_CREDIT_SCORE",
-  /** VT_BIOMETRIC - Biometric Passports and other types of biometric verification */
-  "VT_BIOMETRIC",
-
-] as const;
-
-
 /** ZKCredential contains basic information, which can be used to construct proof-of-ownership of some credential */
-
 
 export const QueryVerificationListRequest = {
   encode(message: { pagination?: PageRequest }, writer = _m0.Writer.create()) {
@@ -112,6 +90,9 @@ export const QueryMergedVerificationDetails = {
         case 10:
           message.version = reader.uint32();
           break;
+        case 11:
+          message.isRevoked = reader.bool();
+          break;  
         default:
           reader.skipType(tag & 7);
           break;
@@ -173,6 +154,9 @@ export const QueryVerificationDetailsResponse = {
         case 9:
           message.version = reader.uint32();
           break;
+        case 10:
+          message.isRevoked = reader.bool();
+          break;  
         default:
           reader.skipType(tag & 7);
           break;
