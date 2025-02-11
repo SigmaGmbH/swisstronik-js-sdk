@@ -3,23 +3,8 @@ import {
   PageResponse,
 } from "cosmjs-types/cosmos/base/query/v1beta1/pagination.js";
 import _m0 from "protobufjs/minimal.js";
-import { verificationTypes } from "./verificationDetails.js";
+import { AddressDetails, VerificationType, VerificationFrontend, MergedAddressDetails } from "../types.js"
 
-export type AddressDetails = {
-  isVerified?: boolean;
-  isRevoked?: boolean;
-  verifications: Verification[];
-};
-
-export type MergedAddressDetails = {
-  address: string;
-} & AddressDetails;
-
-export type Verification = {
-  type: (typeof verificationTypes)[number];
-  verificationId: string;
-  issuerAddress: string;
-};
 
 export const QueryAddressListRequest = {
   encode(message: { pagination?: PageRequest }, writer = _m0.Writer.create()) {
@@ -67,8 +52,8 @@ const queryMergedAddressDetails = {
     const end = length === undefined ? reader.len : reader.pos + length;
 
     const message = {
-      verifications: [] as Verification[],
-    } as MergedAddressDetails;
+      verifications: [] as VerificationFrontend[],
+    } as unknown as MergedAddressDetails;
 
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -113,6 +98,8 @@ export const QueryAddressDetailsResponse = {
 
     const message: AddressDetails = {
       verifications: [],
+      isVerified: false,
+      isRevoked: false
     };
 
     if (length === undefined) {
@@ -149,12 +136,12 @@ export const QueryVerificationResponse = {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
 
-    const message = {} as Verification;
+    const message = {} as VerificationFrontend;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.type = verificationTypes[reader.uint32()];
+          message.type = VerificationType[reader.uint32()].toString();
           break;
         case 2:
           message.verificationId = Buffer.from(reader.bytes()).toString(

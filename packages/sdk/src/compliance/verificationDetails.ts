@@ -3,6 +3,7 @@ import {
   PageResponse,
 } from "cosmjs-types/cosmos/base/query/v1beta1/pagination.js";
 import _m0 from "protobufjs/minimal.js";
+import { MergedVerificationDetails, VerificationDetails, VerificationType } from '..';
 
 export const verificationTypes = [
   /** VT_UNSPECIFIED - VT_UNSPECIFIED defines an invalid/undefined verification type. */
@@ -24,32 +25,9 @@ export const verificationTypes = [
 
 ] as const;
 
-export type VerificationDetails = {
-  type: (typeof verificationTypes)[number];
-  issuerAddress?: string;
-  originChain?: string;
-  issuanceTimestamp?: number;
-  expirationTimestamp?: number;
-  originalData?: string;
-  schema?: string;
-  issuerVerificationId?: string;
-  version?: number;
-  /** Is revoked */
-  isRevoked: boolean;
-};
 
 /** ZKCredential contains basic information, which can be used to construct proof-of-ownership of some credential */
-export interface ZKCredential {
-  type: (typeof verificationTypes)[number];
-  issuerAddress: Uint8Array;
-  holderPublicKey: Uint8Array;
-  expirationTimestamp: number;
-  issuanceTimestamp: number;
-}
 
-export type MergedVerificationDetails = {
-  verificationID: string;
-} & VerificationDetails;
 
 export const QueryVerificationListRequest = {
   encode(message: { pagination?: PageRequest }, writer = _m0.Writer.create()) {
@@ -103,7 +81,7 @@ export const QueryMergedVerificationDetails = {
 
       switch (tag >>> 3) {
         case 1:
-          message.type = verificationTypes[reader.uint32()];
+          message.type = VerificationType[reader.uint32()];
           break;
         case 2:
           message.verificationID = Buffer.from(reader.bytes()).toString(
@@ -169,7 +147,7 @@ export const QueryVerificationDetailsResponse = {
 
       switch (tag >>> 3) {
         case 1:
-          message.type = verificationTypes[reader.uint32()];
+          message.type = VerificationType[reader.uint32()];
           break;
         case 2:
           message.issuerAddress = reader.string();

@@ -119,3 +119,86 @@ export const ISignInputs = {
 export type SwisstronikAccount = Account & {
   monthlyVestingAccount?: MonthlyVestingAccount;
 };
+
+//Instance: Address
+export interface AddressDetails {
+  isVerified: boolean;
+  isRevoked: boolean;
+  verifications: VerificationFrontend[];
+}
+
+export type MergedAddressDetails = {
+  address: string;
+} & AddressDetails;
+
+//Instance: Verification
+export interface Verification {
+  type: (typeof VerificationType)[number];
+  verificationId: Uint8Array;
+  issuerAddress: string;
+}
+
+export interface VerificationFrontend extends Omit<Verification, "verificationId"> {
+  verificationId: string;
+}
+
+export enum VerificationType {
+  /** VT_UNSPECIFIED - VT_UNSPECIFIED defines an invalid/undefined verification type. */
+  VT_UNSPECIFIED = 0,
+  /** VT_KYC - Know Your Custom */
+  VT_KYC = 1,
+  /** VT_KYB - Know Your Business */
+  VT_KYB = 2,
+  /** VT_KYW - Know Your Wallet */
+  VT_KYW = 3,
+  /** VT_HUMANITY - Check humanity */
+  VT_HUMANITY = 4,
+  /** VT_AML - Anti Money Laundering (check transactions) */
+  VT_AML = 5,
+  VT_ADDRESS = 6,
+  VT_CUSTOM = 7,
+  VT_CREDIT_SCORE = 8,
+  /** VT_BIOMETRIC - Biometric Passports and other types of biometric verification */
+  VT_BIOMETRIC = 9,
+  UNRECOGNIZED = -1,
+}
+
+export type VerificationDetails = {
+  type: (typeof VerificationType)[number];
+  issuerAddress?: string;
+  originChain?: string;
+  issuanceTimestamp?: number;
+  expirationTimestamp?: number;
+  originalData?: string;
+  schema?: string;
+  issuerVerificationId?: string;
+  version?: number;
+  /** Is revoked */
+  isRevoked: boolean;
+};
+
+export type MergedVerificationDetails = {
+  verificationID: string;
+} & VerificationDetails;
+
+//Instance: Issuer
+export type IssuerDetails = {
+  name?: string;
+  description?: string;
+  url?: string;
+  logo?: string;
+  legalEntity?: string;
+};
+
+export type MergedIssuerDetails = {
+  issuerAddress: string;
+} & IssuerDetails;
+
+//Instance: ZK
+export interface ZKCredential {
+  type: (typeof VerificationType)[number];
+  issuerAddress: Uint8Array;
+  holderPublicKey: Uint8Array;
+  expirationTimestamp: number;
+  issuanceTimestamp: number;
+}

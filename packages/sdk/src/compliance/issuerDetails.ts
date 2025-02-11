@@ -3,18 +3,8 @@ import {
   PageResponse,
 } from "cosmjs-types/cosmos/base/query/v1beta1/pagination.js";
 import _m0 from "protobufjs/minimal.js";
+import { IssuerDetails, MergedIssuerDetails } from '..';
 
-export type IssuerDetails = {
-  name?: string;
-  description?: string;
-  url?: string;
-  logo?: string;
-  legalEntity?: string;
-};
-
-export type MergedIssuerDetails = {
-  issuerAddress: string;
-} & IssuerDetails;
 
 export const QueryIssuerListRequest = {
   encode(message: { pagination?: PageRequest }, writer = _m0.Writer.create()) {
