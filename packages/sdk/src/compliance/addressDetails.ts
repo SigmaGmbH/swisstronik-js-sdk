@@ -141,7 +141,7 @@ export const QueryVerificationResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.type = VerificationType[reader.uint32()].toString();
+          message.type = VerificationType[reader.uint32()];
           break;
         case 2:
           message.verificationId = Buffer.from(reader.bytes()).toString(

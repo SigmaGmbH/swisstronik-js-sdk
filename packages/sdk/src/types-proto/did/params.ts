@@ -1,8 +1,7 @@
 /* eslint-disable */
-import Long from "long";
-import _m0 from "protobufjs/minimal";
+import _m0 from "protobufjs/minimal.js";
 
-export const protobufPackage = "swisstronik.compliance";
+export const protobufPackage = "swisstronik.did";
 
 /** Params defines the parameters for the module. */
 export interface Params {
@@ -18,17 +17,16 @@ export const Params = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Params {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseParams();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-      }
-      if ((tag & 7) === 4 || tag === 0) {
+        default:
+          reader.skipType(tag & 7);
         break;
       }
-      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -62,8 +60,3 @@ export type DeepPartial<T> = T extends Builtin ? T
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
-
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
-}
