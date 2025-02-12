@@ -1,3 +1,4 @@
+
 import {
   Service as ProtobufService,
   VerificationMethod as ProtobufVerificationMethod,
@@ -210,7 +211,7 @@ export interface IQueryCredentialHashRequest {
 }
 
 export interface IQueryCredentialHashResponse {
-  credentialHash: Uint8Array;
+  credentialHash: string;
 }
 
 export interface IQueryIssuanceProofRequest {
@@ -218,5 +219,14 @@ export interface IQueryIssuanceProofRequest {
 }
 
 export interface IQueryIssuanceProofResponse {
-  encodedProof: Uint8Array;
+  encodedProof: string;
+}
+
+// Instance: Holder
+export interface IQueryHolderByVerificationIdRequest {
+  verificationId: string;
+}
+
+export interface IQueryHolderByVerificationIdResponse {
+  address: string;
 }

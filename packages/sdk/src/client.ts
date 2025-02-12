@@ -26,6 +26,7 @@ import {
 import { PageRequest } from "cosmjs-types/cosmos/base/query/v1beta1/pagination.js";
 import { accountFromAny } from "./utils.js";
 import { QueryCredentialHashRequest, QueryCredentialHashResponse, QueryIssuanceProofRequest, QueryIssuanceProofResponse } from './compliance/issuanceProof.js';
+import { QueryHolderByVerificationIdRequest, QueryHolderByVerificationIdResponse } from './compliance/holderVerification.js';
 export class SwisstronikStargateClient extends StargateClient {
   private readonly overridenAccountParser: AccountParser;
 
@@ -136,7 +137,7 @@ export class SwisstronikStargateClient extends StargateClient {
  * @param verificationId 
  * @returns 
  */
-  public async queryIssuanceCredentionalsRequest(verificationId: string) {
+  public async queryIssuanceCredentionals(verificationId: string) {
     const postParam = QueryCredentialHashRequest.encode({ verificationId }).finish();
     const response = await this.forceGetTmClient().abciQuery({
       path: `/swisstronik.compliance.Query/CredentialHash`,
@@ -150,13 +151,21 @@ export class SwisstronikStargateClient extends StargateClient {
    * @param verificationId 
    * @returns 
    */
-  public async queryIssuanceProofRequest(credentialHash: string) {
+  public async queryIssuanceProof(credentialHash: string) {
     const response = await this.forceGetTmClient().abciQuery({
       path: `/swisstronik.compliance.Query/IssuanceProof`,
-      data: QueryIssuanceProofRequest.encode({ credentialHash }).finish(),
+      data: QueryIssuanceProofRequest.encode({ credentialHash }).finish()
     });
 
     return QueryIssuanceProofResponse.decode(response.value);
+  }
+
+  public async queryHolderVerification(verificationId: string) {
+    const response = await this.forceGetTmClient().abciQuery({
+      path: `/swisstronik.compliance.Query/VerificationHolder`,
+      data: QueryHolderByVerificationIdRequest.encode({ verificationId }).finish()
+    });
+    return QueryHolderByVerificationIdResponse.decode(response.value)
   }
 
 }//
