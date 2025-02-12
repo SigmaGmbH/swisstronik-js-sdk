@@ -3,7 +3,7 @@ import {
   PageResponse,
 } from "cosmjs-types/cosmos/base/query/v1beta1/pagination.js";
 import _m0 from "protobufjs/minimal.js";
-import { IssuerDetails, MergedIssuerDetails } from '..';
+import { IssuerDetails, MergedIssuerDetails } from "../types.js";
 
 
 export const QueryIssuerListRequest = {

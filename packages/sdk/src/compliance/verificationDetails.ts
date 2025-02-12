@@ -3,7 +3,7 @@ import {
   PageResponse,
 } from "cosmjs-types/cosmos/base/query/v1beta1/pagination.js";
 import _m0 from "protobufjs/minimal.js";
-import { MergedVerificationDetails, VerificationDetails, VerificationType } from '..';
+import { MergedVerificationDetails, VerificationDetails, VerificationType } from "../types.js";
 
 /** ZKCredential contains basic information, which can be used to construct proof-of-ownership of some credential */
 
