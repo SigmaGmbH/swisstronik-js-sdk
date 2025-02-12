@@ -203,3 +203,20 @@ export interface ZKCredential {
   expirationTimestamp: number;
   issuanceTimestamp: number;
 }
+
+//Instance: CredentialHash / IssuanceProof
+export interface IQueryCredentialHashRequest {
+  verificationId: string;
+}
+
+export interface IQueryCredentialHashResponse {
+  credentialHash: Uint8Array;
+}
+
+export interface IQueryIssuanceProofRequest {
+  credentialHash: string;
+}
+
+export interface IQueryIssuanceProofResponse {
+  encodedProof: Uint8Array;
+}

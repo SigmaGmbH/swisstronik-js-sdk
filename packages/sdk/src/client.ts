@@ -25,6 +25,7 @@ import {
 } from "./compliance/verificationDetails.js";
 import { PageRequest } from "cosmjs-types/cosmos/base/query/v1beta1/pagination.js";
 import { accountFromAny } from "./utils.js";
+import { QueryCredentialHashRequest, QueryCredentialHashResponse, QueryIssuanceProofRequest, QueryIssuanceProofResponse } from './compliance/issuanceProof.js';
 export class SwisstronikStargateClient extends StargateClient {
   private readonly overridenAccountParser: AccountParser;
 
@@ -129,4 +130,39 @@ export class SwisstronikStargateClient extends StargateClient {
 
     return QueryVerificationListResponse.decode(response.value);
   }
-}
+
+/**
+ * Get credentional hash by verificationId
+ * @param verificationId 
+ * @returns 
+ */
+  public async queryIssuanceCredentionalsRequest(verificationId: string) {
+    const postParam = QueryCredentialHashRequest.encode({ verificationId }).finish();
+    const response = await this.forceGetTmClient().abciQuery({
+      path: `/swisstronik.compliance.Query/CredentialHash`,
+      data: postParam,
+    });
+    return QueryCredentialHashResponse.decode(response.value);
+  }
+
+  /**
+   * Get IssuanceProof by credentialHash
+   * @param verificationId 
+   * @returns 
+   */
+  public async queryIssuanceProofRequest(credentialHash: string) {
+    const response = await this.forceGetTmClient().abciQuery({
+      path: `/swisstronik.compliance.Query/IssuanceProof`,
+      data: QueryIssuanceProofRequest.encode({ credentialHash }).finish(),
+    });
+
+    return QueryIssuanceProofResponse.decode(response.value);
+  }
+
+}//
+
+
+
+
+
+
