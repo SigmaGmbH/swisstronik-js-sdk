@@ -4,23 +4,21 @@ import {
 } from "cosmjs-types/cosmos/base/query/v1beta1/pagination.js";
 import _m0 from "protobufjs/minimal.js";
 import { MergedVerificationDetails, VerificationDetails, VerificationType } from "../types.js";
+import { encodeInputQueryWithPagination, encodeInputQueryWithParam, getQueryInputLimits } from '../compatability/queryHelper.js';
 
 /** ZKCredential contains basic information, which can be used to construct proof-of-ownership of some credential */
 
 export const QueryVerificationListRequest = {
   encode(message: { pagination?: PageRequest }, writer = _m0.Writer.create()) {
-    if (message.pagination !== undefined) {
-      PageRequest.encode(message.pagination, writer.uint32(18).fork()).ldelim();
-    }
+    return encodeInputQueryWithPagination(message, writer);
     return writer;
   },
 };
 
 export const QueryVerificationListResponse = {
   decode(input: _m0.Reader | Uint8Array, length?: number) {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
 
+    const { reader, end } = getQueryInputLimits(input, length);
     const message = {
       verifications: [] as MergedVerificationDetails[],
       pagination: undefined as any as PageResponse,
@@ -49,9 +47,8 @@ export const QueryVerificationListResponse = {
 
 export const QueryMergedVerificationDetails = {
   decode(input: _m0.Reader | Uint8Array, length?: number) {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
 
+    const { reader, end } = getQueryInputLimits(input, length);
     const message = {} as MergedVerificationDetails;
 
     while (reader.pos < end) {
@@ -104,18 +101,14 @@ export const QueryMergedVerificationDetails = {
 
 export const QueryVerificationDetailsRequest = {
   encode(message: { verificationID: string }, writer = _m0.Writer.create()) {
-    if (message.verificationID !== "") {
-      writer.uint32(10).string(message.verificationID);
-    }
-    return writer;
+    return encodeInputQueryWithParam(message, 'verificationID', writer);;
   },
 };
 
 export const QueryVerificationDetailsResponse = {
   decode(input: _m0.Reader | Uint8Array, length?: number) {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-
+    
+    const { reader, end } = getQueryInputLimits(input, length);
     const message = {} as VerificationDetails;
 
     if (length === undefined) {

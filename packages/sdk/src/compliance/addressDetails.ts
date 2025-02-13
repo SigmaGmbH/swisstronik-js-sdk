@@ -4,22 +4,18 @@ import {
 } from "cosmjs-types/cosmos/base/query/v1beta1/pagination.js";
 import _m0 from "protobufjs/minimal.js";
 import { AddressDetails, VerificationType, VerificationFrontend, MergedAddressDetails } from "../types.js"
+import { encodeInputQueryWithPagination, encodeInputQueryWithParam, getQueryInputLimits } from '../compatability/queryHelper.js';
 
 
 export const QueryAddressListRequest = {
   encode(message: { pagination?: PageRequest }, writer = _m0.Writer.create()) {
-    if (message.pagination !== undefined) {
-      PageRequest.encode(message.pagination, writer.uint32(18).fork()).ldelim();
-    }
-    return writer;
+    return encodeInputQueryWithPagination(message, writer);
   },
 };
 
 export const QueryAddressListResponse = {
   decode(input: _m0.Reader | Uint8Array, length?: number) {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-
+    const {reader, end} = getQueryInputLimits(input, length);
     const message = {
       addresses: [] as MergedAddressDetails[],
       pagination: undefined as any as PageResponse,
@@ -48,9 +44,8 @@ export const QueryAddressListResponse = {
 
 const queryMergedAddressDetails = {
   decode(input: _m0.Reader | Uint8Array, length?: number) {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
 
+    const { reader, end } = getQueryInputLimits(input, length);
     const message = {
       verifications: [] as VerificationFrontend[],
     } as unknown as MergedAddressDetails;
@@ -84,10 +79,7 @@ const queryMergedAddressDetails = {
 
 export const QueryAddressDetailsRequest = {
   encode(message: { address: string }, writer = _m0.Writer.create()) {
-    if (message.address !== "") {
-      writer.uint32(10).string(message.address);
-    }
-    return writer;
+    return encodeInputQueryWithParam(message, 'address', writer)
   },
 };
 
@@ -133,10 +125,10 @@ export const QueryAddressDetailsResponse = {
 
 export const QueryVerificationResponse = {
   decode(input: _m0.Reader | Uint8Array, length?: number) {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
 
+    const { reader, end } = getQueryInputLimits(input, length);
     const message = {} as VerificationFrontend;
+    
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

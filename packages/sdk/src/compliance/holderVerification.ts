@@ -11,7 +11,8 @@ export const QueryHolderByVerificationIdRequest = {
 
 export const QueryHolderByVerificationIdResponse = {
   decode(input: _m0.Reader | Uint8Array, length?: number): IQueryHolderByVerificationIdResponse {
-    const { reader, end } = getQueryInputLimits( input, length )
+   
+    const { reader, end } = getQueryInputLimits( input, length );
     const message = {
       address: "" 
     };
