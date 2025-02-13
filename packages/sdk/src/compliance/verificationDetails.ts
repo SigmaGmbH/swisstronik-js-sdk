@@ -11,7 +11,6 @@ import { encodeInputQueryWithPagination, encodeInputQueryWithParam, getQueryInpu
 export const QueryVerificationListRequest = {
   encode(message: { pagination?: PageRequest }, writer = _m0.Writer.create()) {
     return encodeInputQueryWithPagination(message, writer);
-    return writer;
   },
 };
 
@@ -107,7 +106,7 @@ export const QueryVerificationDetailsRequest = {
 
 export const QueryVerificationDetailsResponse = {
   decode(input: _m0.Reader | Uint8Array, length?: number) {
-    
+
     const { reader, end } = getQueryInputLimits(input, length);
     const message = {} as VerificationDetails;
 
