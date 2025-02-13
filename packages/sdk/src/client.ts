@@ -18,6 +18,8 @@ import {
   QueryIssuerListResponse,
 } from "./compliance/issuerDetails.js";
 import {
+  QueryISVerificationV2Request,
+  QueryISVerificationV2Response,
   QueryVerificationDetailsRequest,
   QueryVerificationDetailsResponse,
   QueryVerificationListRequest,
@@ -130,6 +132,15 @@ export class SwisstronikStargateClient extends StargateClient {
     });
 
     return QueryVerificationListResponse.decode(response.value);
+  }
+
+  public async queryIsVerificationV2(verificationID: string) {
+    const response = await this.forceGetTmClient().abciQuery({
+      path: `/swisstronik.compliance.Query/VerificationDetails`,
+      data: QueryISVerificationV2Request.encode({ verificationID }).finish()
+    });
+
+    return QueryISVerificationV2Response.decode(response.value)
   }
 
 /**

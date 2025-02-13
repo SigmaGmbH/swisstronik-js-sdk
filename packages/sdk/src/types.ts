@@ -1,4 +1,3 @@
-
 import {
   Service as ProtobufService,
   VerificationMethod as ProtobufVerificationMethod,
@@ -125,7 +124,7 @@ export type SwisstronikAccount = Account & {
 export interface AddressDetails {
   isVerified: boolean;
   isRevoked: boolean;
-  verifications: VerificationFrontend[];
+  verifications: Verification[];
 }
 
 export type MergedAddressDetails = {
@@ -135,12 +134,12 @@ export type MergedAddressDetails = {
 //Instance: Verification
 export interface Verification {
   type: (typeof VerificationType)[number];
-  verificationId: Uint8Array;
+  verificationId: string;
   issuerAddress: string;
 }
 
-export interface VerificationFrontend extends Omit<Verification, "verificationId"> {
-  verificationId: string;
+export interface VerificationRPC extends Omit<Verification, "verificationId"> {
+  verificationId: Uint8Array;
 }
 
 export enum VerificationType {
@@ -163,6 +162,8 @@ export enum VerificationType {
   VT_BIOMETRIC = 9,
   UNRECOGNIZED = -1,
 }
+
+export const verificationTypes = VerificationType;
 
 export type VerificationDetails = {
   type: (typeof VerificationType)[number];

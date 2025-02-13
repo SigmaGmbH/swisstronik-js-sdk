@@ -157,3 +157,38 @@ export const QueryVerificationDetailsResponse = {
     return message;
   },
 };
+
+
+export const QueryISVerificationV2Request = {
+  encode(message: { verificationID: string }, writer = _m0.Writer.create()) {
+    return encodeInputQueryWithParam(message, 'verificationID', writer);;
+  }
+};
+
+export const QueryISVerificationV2Response = {
+  decode(input: _m0.Reader | Uint8Array, length?: number) {
+    const { reader, end } = getQueryInputLimits(input, length);
+    const message = {
+      version: 0
+    } as VerificationDetails;
+
+    if (length === undefined) {
+      reader.uint32();
+      reader.uint32();
+    }
+
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+
+      switch (tag >>> 3) {
+        case 9:
+          message.version = reader.uint32();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;  
+      }
+    }
+    return message?.version == 2
+  }
+};

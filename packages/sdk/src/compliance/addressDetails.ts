@@ -3,7 +3,7 @@ import {
   PageResponse,
 } from "cosmjs-types/cosmos/base/query/v1beta1/pagination.js";
 import _m0 from "protobufjs/minimal.js";
-import { AddressDetails, VerificationType, VerificationFrontend, MergedAddressDetails } from "../types.js"
+import { AddressDetails, VerificationType, Verification, MergedAddressDetails } from "../types.js"
 import { encodeInputQueryWithPagination, encodeInputQueryWithParam, getQueryInputLimits } from '../compatability/queryHelper.js';
 
 
@@ -47,7 +47,7 @@ const queryMergedAddressDetails = {
 
     const { reader, end } = getQueryInputLimits(input, length);
     const message = {
-      verifications: [] as VerificationFrontend[],
+      verifications: [] as Verification[],
     } as unknown as MergedAddressDetails;
 
     while (reader.pos < end) {
@@ -127,8 +127,8 @@ export const QueryVerificationResponse = {
   decode(input: _m0.Reader | Uint8Array, length?: number) {
 
     const { reader, end } = getQueryInputLimits(input, length);
-    const message = {} as VerificationFrontend;
-    
+    const message = {} as Verification;
+
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
