@@ -3,7 +3,7 @@ import {
   PageResponse,
 } from "cosmjs-types/cosmos/base/query/v1beta1/pagination.js";
 import _m0 from "protobufjs/minimal.js";
-import { MergedVerificationDetails, VerificationDetails, VerificationType } from "../types.js";
+import { MergedVerificationDetails, VerificationDetails, VerificationTypeEnum } from "../types.js";
 import { encodeInputQueryWithPagination, encodeInputQueryWithParam, getQueryInputLimits } from '../compatability/queryHelper.js';
 
 /** ZKCredential contains basic information, which can be used to construct proof-of-ownership of some credential */
@@ -55,7 +55,7 @@ export const QueryMergedVerificationDetails = {
 
       switch (tag >>> 3) {
         case 1:
-          message.type = VerificationType[reader.uint32()];
+          message.type = VerificationTypeEnum[reader.uint32()];
           break;
         case 2:
           message.verificationID = Buffer.from(reader.bytes()).toString(
@@ -120,7 +120,7 @@ export const QueryVerificationDetailsResponse = {
 
       switch (tag >>> 3) {
         case 1:
-          message.type = VerificationType[reader.uint32()];
+          message.type = VerificationTypeEnum[reader.uint32()];
           break;
         case 2:
           message.issuerAddress = reader.string();

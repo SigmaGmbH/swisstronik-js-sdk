@@ -133,7 +133,7 @@ export type MergedAddressDetails = {
 
 //Instance: Verification
 export interface Verification {
-  type: (typeof VerificationType)[number];
+  type: VerificationType;
   verificationId: string;
   issuerAddress: string;
 }
@@ -142,7 +142,7 @@ export interface VerificationRPC extends Omit<Verification, "verificationId"> {
   verificationId: Uint8Array;
 }
 
-export enum VerificationType {
+export enum VerificationTypeEnum {
   /** VT_UNSPECIFIED - VT_UNSPECIFIED defines an invalid/undefined verification type. */
   VT_UNSPECIFIED = 0,
   /** VT_KYC - Know Your Custom */
@@ -163,10 +163,12 @@ export enum VerificationType {
   UNRECOGNIZED = -1,
 }
 
-export const verificationTypes = VerificationType;
+export const verificationTypes = VerificationTypeEnum;
+
+export type VerificationType = (typeof VerificationTypeEnum)[number];
 
 export type VerificationDetails = {
-  type: (typeof VerificationType)[number];
+  type: VerificationType;
   issuerAddress?: string;
   originChain?: string;
   issuanceTimestamp?: number;
@@ -179,7 +181,7 @@ export type VerificationDetails = {
   isRevoked: boolean;
 };
 
-export type MergedVerificationDetails = {
+export type MergedVerificationDetails = { 
   verificationID: string;
 } & VerificationDetails;
 
@@ -199,7 +201,7 @@ export type MergedIssuerDetails = {
 
 //Instance: ZK
 export interface ZKCredential {
-  type: (typeof VerificationType)[number];
+  type: VerificationType;
   issuerAddress: Uint8Array;
   holderPublicKey: Uint8Array;
   expirationTimestamp: number;

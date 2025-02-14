@@ -3,7 +3,7 @@ import {
   PageResponse,
 } from "cosmjs-types/cosmos/base/query/v1beta1/pagination.js";
 import _m0 from "protobufjs/minimal.js";
-import { AddressDetails, VerificationType, Verification, MergedAddressDetails } from "../types.js"
+import { AddressDetails, VerificationTypeEnum, Verification, MergedAddressDetails } from "../types.js"
 import { encodeInputQueryWithPagination, encodeInputQueryWithParam, getQueryInputLimits } from '../compatability/queryHelper.js';
 
 
@@ -133,7 +133,7 @@ export const QueryVerificationResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.type = VerificationType[reader.uint32()];
+          message.type = VerificationTypeEnum[reader.uint32()];
           break;
         case 2:
           message.verificationId = Buffer.from(reader.bytes()).toString(
