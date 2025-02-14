@@ -119,3 +119,117 @@ export const ISignInputs = {
 export type SwisstronikAccount = Account & {
   monthlyVestingAccount?: MonthlyVestingAccount;
 };
+
+//Instance: Address
+export interface AddressDetails {
+  isVerified: boolean;
+  isRevoked: boolean;
+  verifications: Verification[];
+}
+
+export type MergedAddressDetails = {
+  address: string;
+} & AddressDetails;
+
+//Instance: Verification
+export interface Verification {
+  type: VerificationType;
+  verificationId: string;
+  issuerAddress: string;
+}
+
+export interface VerificationRPC extends Omit<Verification, "verificationId"> {
+  verificationId: Uint8Array;
+}
+
+export enum VerificationTypeEnum {
+  /** VT_UNSPECIFIED - VT_UNSPECIFIED defines an invalid/undefined verification type. */
+  VT_UNSPECIFIED = 0,
+  /** VT_KYC - Know Your Custom */
+  VT_KYC = 1,
+  /** VT_KYB - Know Your Business */
+  VT_KYB = 2,
+  /** VT_KYW - Know Your Wallet */
+  VT_KYW = 3,
+  /** VT_HUMANITY - Check humanity */
+  VT_HUMANITY = 4,
+  /** VT_AML - Anti Money Laundering (check transactions) */
+  VT_AML = 5,
+  VT_ADDRESS = 6,
+  VT_CUSTOM = 7,
+  VT_CREDIT_SCORE = 8,
+  /** VT_BIOMETRIC - Biometric Passports and other types of biometric verification */
+  VT_BIOMETRIC = 9,
+  UNRECOGNIZED = -1,
+}
+
+export const verificationTypes = VerificationTypeEnum;
+
+export type VerificationType = (typeof VerificationTypeEnum)[number];
+
+export type VerificationDetails = {
+  type: VerificationType;
+  issuerAddress?: string;
+  originChain?: string;
+  issuanceTimestamp?: number;
+  expirationTimestamp?: number;
+  originalData?: string;
+  schema?: string;
+  issuerVerificationId?: string;
+  version?: number;
+  /** Is revoked */
+  isRevoked: boolean;
+};
+
+export type MergedVerificationDetails = { 
+  verificationID: string;
+} & VerificationDetails;
+
+//Instance: Issuer
+export type IssuerDetails = {
+  name?: string;
+  description?: string;
+  url?: string;
+  logo?: string;
+  legalEntity?: string;
+  creator?: string;
+};
+
+export type MergedIssuerDetails = {
+  issuerAddress: string;
+} & IssuerDetails;
+
+//Instance: ZK
+export interface ZKCredential {
+  type: VerificationType;
+  issuerAddress: Uint8Array;
+  holderPublicKey: Uint8Array;
+  expirationTimestamp: number;
+  issuanceTimestamp: number;
+}
+
+//Instance: CredentialHash / IssuanceProof
+export interface IQueryCredentialHashRequest {
+  verificationId: string;
+}
+
+export interface IQueryCredentialHashResponse {
+  credentialHash: string;
+}
+
+export interface IQueryIssuanceProofRequest {
+  credentialHash: string;
+}
+
+export interface IQueryIssuanceProofResponse {
+  encodedProof: string;
+}
+
+// Instance: Holder
+export interface IQueryHolderByVerificationIdRequest {
+  verificationId: string;
+}
+
+export interface IQueryHolderByVerificationIdResponse {
+  address: string;
+}

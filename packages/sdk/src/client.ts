@@ -18,6 +18,8 @@ import {
   QueryIssuerListResponse,
 } from "./compliance/issuerDetails.js";
 import {
+  QueryISVerificationV2Request,
+  QueryISVerificationV2Response,
   QueryVerificationDetailsRequest,
   QueryVerificationDetailsResponse,
   QueryVerificationListRequest,
@@ -25,6 +27,8 @@ import {
 } from "./compliance/verificationDetails.js";
 import { PageRequest } from "cosmjs-types/cosmos/base/query/v1beta1/pagination.js";
 import { accountFromAny } from "./utils.js";
+import { QueryCredentialHashRequest, QueryCredentialHashResponse, QueryIssuanceProofRequest, QueryIssuanceProofResponse } from './compliance/issuanceProof.js';
+import { QueryHolderByVerificationIdRequest, QueryHolderByVerificationIdResponse } from './compliance/holderVerification.js';
 export class SwisstronikStargateClient extends StargateClient {
   private readonly overridenAccountParser: AccountParser;
 
@@ -129,4 +133,56 @@ export class SwisstronikStargateClient extends StargateClient {
 
     return QueryVerificationListResponse.decode(response.value);
   }
-}
+
+  public async queryIsVerificationV2(verificationID: string) {
+    const response = await this.forceGetTmClient().abciQuery({
+      path: `/swisstronik.compliance.Query/VerificationDetails`,
+      data: QueryISVerificationV2Request.encode({ verificationID }).finish()
+    });
+
+    return QueryISVerificationV2Response.decode(response.value)
+  }
+
+/**
+ * Get credentional hash by verificationId
+ * @param verificationId 
+ * @returns 
+ */
+  public async queryIssuanceCredentionals(verificationId: string) {
+    const postParam = QueryCredentialHashRequest.encode({ verificationId }).finish();
+    const response = await this.forceGetTmClient().abciQuery({
+      path: `/swisstronik.compliance.Query/CredentialHash`,
+      data: postParam,
+    });
+    return QueryCredentialHashResponse.decode(response.value);
+  }
+
+  /**
+   * Get IssuanceProof by credentialHash
+   * @param verificationId 
+   * @returns 
+   */
+  public async queryIssuanceProof(credentialHash: string) {
+    const response = await this.forceGetTmClient().abciQuery({
+      path: `/swisstronik.compliance.Query/IssuanceProof`,
+      data: QueryIssuanceProofRequest.encode({ credentialHash }).finish()
+    });
+
+    return QueryIssuanceProofResponse.decode(response.value);
+  }
+
+  public async queryHolderVerification(verificationId: string) {
+    const response = await this.forceGetTmClient().abciQuery({
+      path: `/swisstronik.compliance.Query/VerificationHolder`,
+      data: QueryHolderByVerificationIdRequest.encode({ verificationId }).finish()
+    });
+    return QueryHolderByVerificationIdResponse.decode(response.value)
+  }
+
+}//
+
+
+
+
+
+

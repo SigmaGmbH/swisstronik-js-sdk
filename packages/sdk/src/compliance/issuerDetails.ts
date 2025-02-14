@@ -3,33 +3,20 @@ import {
   PageResponse,
 } from "cosmjs-types/cosmos/base/query/v1beta1/pagination.js";
 import _m0 from "protobufjs/minimal.js";
+import { IssuerDetails, MergedIssuerDetails } from "../types.js";
+import { encodeInputQueryWithPagination, encodeInputQueryWithParam, getQueryInputLimits } from '../compatability/queryHelper.js';
 
-export type IssuerDetails = {
-  name?: string;
-  description?: string;
-  url?: string;
-  logo?: string;
-  legalEntity?: string;
-};
-
-export type MergedIssuerDetails = {
-  issuerAddress: string;
-} & IssuerDetails;
 
 export const QueryIssuerListRequest = {
   encode(message: { pagination?: PageRequest }, writer = _m0.Writer.create()) {
-    if (message.pagination !== undefined) {
-      PageRequest.encode(message.pagination, writer.uint32(18).fork()).ldelim();
-    }
-    return writer;
+    return encodeInputQueryWithPagination(message, writer);
   },
 };
 
 export const QueryIssuerListResponse = {
   decode(input: _m0.Reader | Uint8Array, length?: number) {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
 
+    const { reader, end } = getQueryInputLimits(input, length);
     const message = {
       issuers: [] as MergedIssuerDetails[],
       pagination: undefined as any as PageResponse,
@@ -58,9 +45,8 @@ export const QueryIssuerListResponse = {
 
 export const QueryMergedIssuerDetails = {
   decode(input: _m0.Reader | Uint8Array, length?: number) {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
 
+    const { reader, end } = getQueryInputLimits(input, length);
     const message = {} as MergedIssuerDetails;
 
     while (reader.pos < end) {
@@ -85,6 +71,9 @@ export const QueryMergedIssuerDetails = {
         case 6:
           message.legalEntity = reader.string();
           break;
+        case 7:
+          message.creator = reader.string();
+          break;  
         default:
           reader.skipType(tag & 7);
           break;
@@ -96,18 +85,14 @@ export const QueryMergedIssuerDetails = {
 
 export const QueryIssuerDetailsRequest = {
   encode(message: { issuerAddress: string }, writer = _m0.Writer.create()) {
-    if (message.issuerAddress !== "") {
-      writer.uint32(10).string(message.issuerAddress);
-    }
-    return writer;
+    return encodeInputQueryWithParam(message, 'issuerAddress', writer);
   },
 };
 
 export const QueryIssuerDetailsResponse = {
   decode(input: _m0.Reader | Uint8Array, length?: number) {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-
+    
+    const { reader, end } = getQueryInputLimits(input, length);
     const message: IssuerDetails = {
       name: undefined,
       description: undefined,

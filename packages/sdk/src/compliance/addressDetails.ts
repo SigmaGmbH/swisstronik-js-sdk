@@ -3,38 +3,19 @@ import {
   PageResponse,
 } from "cosmjs-types/cosmos/base/query/v1beta1/pagination.js";
 import _m0 from "protobufjs/minimal.js";
-import { verificationTypes } from "./verificationDetails.js";
+import { AddressDetails, VerificationTypeEnum, Verification, MergedAddressDetails } from "../types.js"
+import { encodeInputQueryWithPagination, encodeInputQueryWithParam, getQueryInputLimits } from '../compatability/queryHelper.js';
 
-export type AddressDetails = {
-  isVerified?: boolean;
-  isRevoked?: boolean;
-  verifications: Verification[];
-};
-
-export type MergedAddressDetails = {
-  address: string;
-} & AddressDetails;
-
-export type Verification = {
-  type: (typeof verificationTypes)[number];
-  verificationId: string;
-  issuerAddress: string;
-};
 
 export const QueryAddressListRequest = {
   encode(message: { pagination?: PageRequest }, writer = _m0.Writer.create()) {
-    if (message.pagination !== undefined) {
-      PageRequest.encode(message.pagination, writer.uint32(18).fork()).ldelim();
-    }
-    return writer;
+    return encodeInputQueryWithPagination(message, writer);
   },
 };
 
 export const QueryAddressListResponse = {
   decode(input: _m0.Reader | Uint8Array, length?: number) {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-
+    const {reader, end} = getQueryInputLimits(input, length);
     const message = {
       addresses: [] as MergedAddressDetails[],
       pagination: undefined as any as PageResponse,
@@ -63,12 +44,11 @@ export const QueryAddressListResponse = {
 
 const queryMergedAddressDetails = {
   decode(input: _m0.Reader | Uint8Array, length?: number) {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
 
+    const { reader, end } = getQueryInputLimits(input, length);
     const message = {
       verifications: [] as Verification[],
-    } as MergedAddressDetails;
+    } as unknown as MergedAddressDetails;
 
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -99,10 +79,7 @@ const queryMergedAddressDetails = {
 
 export const QueryAddressDetailsRequest = {
   encode(message: { address: string }, writer = _m0.Writer.create()) {
-    if (message.address !== "") {
-      writer.uint32(10).string(message.address);
-    }
-    return writer;
+    return encodeInputQueryWithParam(message, 'address', writer)
   },
 };
 
@@ -113,6 +90,8 @@ export const QueryAddressDetailsResponse = {
 
     const message: AddressDetails = {
       verifications: [],
+      isVerified: false,
+      isRevoked: false
     };
 
     if (length === undefined) {
@@ -146,15 +125,15 @@ export const QueryAddressDetailsResponse = {
 
 export const QueryVerificationResponse = {
   decode(input: _m0.Reader | Uint8Array, length?: number) {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
 
+    const { reader, end } = getQueryInputLimits(input, length);
     const message = {} as Verification;
+
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.type = verificationTypes[reader.uint32()];
+          message.type = VerificationTypeEnum[reader.uint32()];
           break;
         case 2:
           message.verificationId = Buffer.from(reader.bytes()).toString(

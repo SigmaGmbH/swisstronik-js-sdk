@@ -1,0 +1,44 @@
+syntax = "proto3";
+package swisstronik.compliance;
+
+import "gogoproto/gogo.proto";
+import "swisstronik/compliance/params.proto";
+import "swisstronik/compliance/entities.proto";
+
+option go_package = "swisstronik/x/compliance/types";
+
+// GenesisState defines the compliance module's genesis state.
+message GenesisState {
+  Params params = 1 [ (gogoproto.nullable) = false ];
+  repeated GenesisIssuerDetails issuerDetails = 2;
+  repeated GenesisAddressDetails addressDetails = 3;
+  repeated GenesisVerificationDetails verificationDetails = 4;
+  repeated OperatorDetails operators = 5;
+  repeated GenesisHolderPublicKeys publicKeys = 6;
+  repeated GenesisLinkVerificationIdToPublicKey linksToPublicKey = 7;
+}
+
+message GenesisIssuerDetails {
+  string address = 1;
+  IssuerDetails details = 2;
+}
+
+message GenesisAddressDetails {
+  string address = 1;
+  AddressDetails details = 2;
+}
+
+message GenesisVerificationDetails {
+  bytes id = 1;
+  VerificationDetails details = 2;
+}
+
+message GenesisHolderPublicKeys {
+  string address = 1;
+  bytes publicKey = 2;
+}
+
+message GenesisLinkVerificationIdToPublicKey {
+  bytes id = 1;
+  bytes publicKey = 2;
+}
