@@ -167,6 +167,8 @@ export const verificationTypes = VerificationTypeEnum;
 
 export type VerificationType = (typeof VerificationTypeEnum)[number];
 
+export type VerificationTypeAnotation = keyof typeof VerificationTypeEnum;
+
 export type VerificationDetails = {
   type: VerificationType;
   issuerAddress?: string;

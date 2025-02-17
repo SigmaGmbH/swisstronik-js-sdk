@@ -188,9 +188,10 @@ export {
 	createSignInputsFromImportableEd25519Key,
 	validateSpecCompliantPayload,
 	isEqualKeyValuePair,
-    createCosmosPayerWallet,
+  createCosmosPayerWallet,
 	getCosmosAccount,
-	checkBalance
+	checkBalance,
+	convertVerificationTypeToNumberValue
 } from './utils.js'
 export * from './compatability/index.js'
 export * from './types-proto/index.js'
