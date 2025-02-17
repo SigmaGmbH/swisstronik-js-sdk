@@ -13,6 +13,9 @@ import {
     SpecValidationResult,
     JsonWebKeyExternal,
     SwisstronikAccount,
+    VerificationType,
+    VerificationTypeAnotation,
+    VerificationTypeEnum,
 } from "./types.js"
 import {
     fromString,
@@ -427,3 +430,7 @@ export function accountFromAny(
         );
     }
   }
+
+export const convertVerificationTypeToNumberValue = (vt: VerificationType) => {
+    return VerificationTypeEnum[vt as VerificationTypeAnotation]
+}
