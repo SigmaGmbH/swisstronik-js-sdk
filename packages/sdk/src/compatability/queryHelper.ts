@@ -19,7 +19,7 @@ export function encodeInputQueryWithPagination<T extends { pagination?: PageRequ
   writer: _m0.Writer = _m0.Writer.create()
 ): _m0.Writer {
   if (message.pagination !== undefined) {
-    PageRequest.encode(message.pagination, writer.uint32(18).fork()).ldelim();
+    PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
   }
   return writer;
 }
