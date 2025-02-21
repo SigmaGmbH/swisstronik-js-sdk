@@ -134,14 +134,6 @@ export class SwisstronikStargateClient extends StargateClient {
     return QueryVerificationListResponse.decode(response.value);
   }
 
-  public async queryIsVerificationV2(verificationID: string) {
-    const response = await this.forceGetTmClient().abciQuery({
-      path: `/swisstronik.compliance.Query/VerificationDetails`,
-      data: QueryISVerificationV2Request.encode({ verificationID }).finish()
-    });
-
-    return QueryISVerificationV2Response.decode(response.value)
-  }
 
 /**
  * Get credentional hash by verificationId
@@ -179,7 +171,17 @@ export class SwisstronikStargateClient extends StargateClient {
     return QueryHolderByVerificationIdResponse.decode(response.value)
   }
 
+  public async queryIsVerificationV2(verificationID: string) {
+    const issuanceCredential = await this.queryIssuanceCredentionals(verificationID)
+
+    if (!issuanceCredential || issuanceCredential?.credentialHash.length === 0) {
+      return false
+    }
+    const issuanceProof = await this.queryIssuanceProof(issuanceCredential?.credentialHash)
+    return issuanceProof && issuanceProof?.encodedProof.length > 0;
+
 }//
+
 
 
 
