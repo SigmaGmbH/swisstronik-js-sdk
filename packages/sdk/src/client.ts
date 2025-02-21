@@ -179,6 +179,7 @@ export class SwisstronikStargateClient extends StargateClient {
     }
     const issuanceProof = await this.queryIssuanceProof(issuanceCredential?.credentialHash)
     return issuanceProof && issuanceProof?.encodedProof.length > 0;
+  }
 
 }//
 
