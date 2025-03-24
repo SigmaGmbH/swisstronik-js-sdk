@@ -78,8 +78,14 @@ const queryMergedAddressDetails = {
 };
 
 export const QueryAddressDetailsRequest = {
-  encode(message: { address: string }, writer = _m0.Writer.create()) {
-    return encodeInputQueryWithParam(message, 'address', writer)
+  encode(message: { address: string; onlyWithExistingIssuer: boolean; }, writer = _m0.Writer.create()) {
+    if (message.address !== "") {
+      writer.uint32(10).string(message.address);
+    }
+    if (message.onlyWithExistingIssuer !== false) {
+      writer.uint32(16).bool(message.onlyWithExistingIssuer);
+    }
+    return writer;
   },
 };
 

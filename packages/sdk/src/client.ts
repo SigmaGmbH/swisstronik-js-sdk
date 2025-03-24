@@ -18,6 +18,7 @@ import {
   QueryIssuerListResponse,
 } from "./compliance/issuerDetails.js";
 import {
+  QueryAllVerificationDetailsByAddressRequest, QueryAllVerificationDetailsByAddressResponse,
   QueryISVerificationV2Request,
   QueryISVerificationV2Response,
   QueryVerificationDetailsRequest,
@@ -80,10 +81,10 @@ export class SwisstronikStargateClient extends StargateClient {
     }
   }
 
-  public async queryAddressDetails(address: string) {
+  public async queryAddressDetails(address: string, onlyWithExistingIssuer: boolean = false) {
     const response = await this.forceGetTmClient().abciQuery({
       path: `/swisstronik.compliance.Query/AddressDetails`,
-      data: QueryAddressDetailsRequest.encode({ address }).finish(),
+      data: QueryAddressDetailsRequest.encode({ address, onlyWithExistingIssuer }).finish(),
     });
 
     return QueryAddressDetailsResponse.decode(response.value);
@@ -143,10 +144,20 @@ export class SwisstronikStargateClient extends StargateClient {
     return QueryISVerificationV2Response.decode(response.value)
   }
 
-/**
+  public async queryAllVerificationDetailsByAddress(address: string, onlyWithExistingIssuer: boolean = false) {
+    const response = await this.forceGetTmClient().abciQuery({
+      path: `/swisstronik.compliance.Query/AllVerificationDetailsByAddress`,
+      data: QueryAllVerificationDetailsByAddressRequest.encode({ address, onlyWithExistingIssuer }).finish(),
+    });
+
+    return QueryAllVerificationDetailsByAddressResponse.decode(response.value);
+  }
+
+
+  /**
  * Get credentional hash by verificationId
- * @param verificationId 
- * @returns 
+ * @param verificationId
+ * @returns
  */
   public async queryIssuanceCredentionals(verificationId: string) {
     const postParam = QueryCredentialHashRequest.encode({ verificationId }).finish();
@@ -159,8 +170,8 @@ export class SwisstronikStargateClient extends StargateClient {
 
   /**
    * Get IssuanceProof by credentialHash
-   * @param verificationId 
-   * @returns 
+   * @param verificationId
+   * @returns
    */
   public async queryIssuanceProof(credentialHash: string) {
     const response = await this.forceGetTmClient().abciQuery({

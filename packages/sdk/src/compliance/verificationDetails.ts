@@ -88,7 +88,7 @@ export const QueryMergedVerificationDetails = {
           break;
         case 11:
           message.isRevoked = reader.bool();
-          break;  
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -148,7 +148,7 @@ export const QueryVerificationDetailsResponse = {
           break;
         case 10:
           message.isRevoked = reader.bool();
-          break;  
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -186,9 +186,94 @@ export const QueryISVerificationV2Response = {
           break;
         default:
           reader.skipType(tag & 7);
-          break;  
+          break;
       }
     }
     return message?.version == 2
   }
+};
+
+export interface QueryAllVerificationDetailsByAddressRequest {
+  address: string;
+  onlyWithExistingIssuer: boolean;
+}
+
+export interface QueryAllVerificationDetailsByAddressResponse {
+  details: VerificationDetails[];
+}
+
+
+function createBaseQueryAllVerificationDetailsByAddressRequest(): QueryAllVerificationDetailsByAddressRequest {
+  return { address: "", onlyWithExistingIssuer: false };
+}
+
+export const QueryAllVerificationDetailsByAddressRequest = {
+  encode(message: QueryAllVerificationDetailsByAddressRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.address !== "") {
+      writer.uint32(10).string(message.address);
+    }
+    if (message.onlyWithExistingIssuer !== false) {
+      writer.uint32(16).bool(message.onlyWithExistingIssuer);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryAllVerificationDetailsByAddressRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryAllVerificationDetailsByAddressRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.address = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.onlyWithExistingIssuer = reader.bool();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  }
+};
+
+function createBaseQueryAllVerificationDetailsByAddressResponse(): QueryAllVerificationDetailsByAddressResponse {
+  return { details: [] };
+}
+
+export const QueryAllVerificationDetailsByAddressResponse = {
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryAllVerificationDetailsByAddressResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryAllVerificationDetailsByAddressResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.details.push(QueryVerificationDetailsResponse.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
 };
