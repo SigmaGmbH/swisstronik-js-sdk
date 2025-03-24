@@ -427,10 +427,10 @@ export class SwisstronikSigningStargateClient extends SigningStargateClient {
 		return signInfos
 	}
 
-	public async queryAddressDetails(address: string) {
+	public async queryAddressDetails(address: string,onlyWithExistingIssuer: boolean) {
     const response = await this.forceGetTmClient().abciQuery({
       path: `/swisstronik.compliance.Query/AddressDetails`,
-      data: QueryAddressDetailsRequest.encode({ address }).finish(),
+      data: QueryAddressDetailsRequest.encode({ address, onlyWithExistingIssuer }).finish(),
     });
 
     return QueryAddressDetailsResponse.decode(response.value);
